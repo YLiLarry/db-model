@@ -29,6 +29,7 @@ library
                      , scientific
                      , text
                      , bytestring
+                     , split
   default-language:    Haskell2010
 
 test-suite db-model-test

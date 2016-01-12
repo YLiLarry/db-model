@@ -1,71 +1,155 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE FlexibleInstances #-}
-{-# LANGUAGE DefaultSignatures #-}
-{-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE TypeOperators #-}
+{-# LANGUAGE UndecidableInstances #-}
+{-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE KindSignatures #-}
+{-# LANGUAGE StandaloneDeriving #-}
+{-# LANGUAGE FunctionalDependencies #-}
+{-# LANGUAGE ScopedTypeVariables #-}
 
 module DB.Model.Internal where
 
-import GHC.Generics
+import GHC.Generics hiding (to, from)
 import Control.Monad
-import Data.IORef
-import Cache.State
 import Control.Monad.State
 import Control.Monad.Reader
-import Data.Hashable
-import Database.HDBC
+import Database.HDBC hiding (run)
 import Text.Printf
-
-data Select = Select String String String
-
-instance DB Select SqlValue where
-   execNoCache (Select table column whereClause) = do
-      cnn <- ask
-      v <- lift $ withTransaction cnn (\cnn -> quickQuery cnn (printf "SELECT * FROM %s WHERE %s" table whereClause) [])
-      return v
+import qualified Data.Aeson as A
+import Control.Arrow
+import Data.List as L
+import qualified Data.Map as M
+import DB.Model.Internal.Exception
+import DB.Model.Internal.TypeCast
+import qualified Data.Vector as V
       
-         
-      
+class Model (a :: (* -> *) -> *)
+instance (Field f) => Model (a f)
 
-class DB c v where
-   exec :: (Hashable c, Eq c, IConnection cnn) => c -> StateT (Cache c [v]) (ReaderT cnn IO) v
-   exec c = head <$> withCache execNoCache c
+instance (Model a, Generic (a m), A.GToJSON (Rep (a m))) => A.ToJSON (a m)
+instance (Model a, Generic (a m), A.GFromJSON (Rep (a m))) => A.FromJSON (a m)
 
-   execNoCache :: (IConnection cnn) => c -> ReaderT cnn IO [v]
+class Field (a :: * -> *)
+instance Field Load
+instance Field Value
+instance Field Save
+instance Field SaveID
+
+instance (Field f, Generic (f x), A.GToJSON (Rep (f x))) => A.ToJSON (f x)
+instance (Field f, Generic (f x), A.GFromJSON (Rep (f x))) => A.FromJSON (f x)
+
+
+data Load x = Load String String String
+            | LVal x
+            | LNull 
+            deriving (Generic, Generic1, Show, Eq)
+
+data Save x = Save String String x
+            | Ignore
+            deriving (Generic, Generic1, Show, Eq)
+
+data Value x = Value x
+             | Null
+            deriving (Generic, Generic1, Show, Eq)
+            
+throughMaybe :: (a -> b) -> Value a -> Value b
+throughMaybe f = fromMaybe . fmap f . toMaybe 
+   
+toMaybe :: Value a -> Maybe a
+toMaybe (Value x) = Just x
+toMaybe Null = Nothing
+
+fromMaybe :: Maybe a -> Value a
+fromMaybe Nothing = Null
+fromMaybe (Just x) = Value x
+   
+data SaveID x = SaveID Int 
+              | Ignored
+            deriving (Generic, Generic1, Show, Eq)
+
+class DB b r | b -> r, r -> b where
+   exec :: (IConnection cnn) => b SqlValue -> ReaderT cnn IO [[SqlValue]]
+   optimize :: [(String, b SqlValue)] -> [([String], b SqlValue)] 
+   toSqlVal :: A.Value -> b SqlValue
+   fromSqlVal :: r SqlValue -> A.Value
+   wrapVal :: SqlValue -> r SqlValue
+   wrapCnst :: b SqlValue -> r SqlValue
+   sendSql :: b SqlValue -> Bool
+
+   to :: (A.ToJSON (a b)) => a b -> [(String, b SqlValue)]
+   to = map (toSqlVal `second`) . M.toList . unsafeFromJSON . A.toJSON
+
+   from :: (A.FromJSON (a r)) => [(String, r SqlValue)] -> a r
+   from = unsafeFromJSON . A.toJSON . M.fromList . map (fromSqlVal `second`)
+
+   run :: (IConnection cnn) => [(String, b SqlValue)] -> ReaderT cnn IO [[(String, r SqlValue)]]
+   run a = map g <$> f <$> mapM (runKleisli . second . Kleisli $ exec) (optimize nonconstants)
+      where
+         (nonconstants, constants) = map (wrapCnst `second`) `second` partition (sendSql . snd) a
+         g :: [(String, SqlValue)] -> [(String, r SqlValue)]
+         g a = map (wrapVal `second`) a ++ constants
+         f :: [([String], [[SqlValue]])] -> [[(String, SqlValue)]]
+         f v = trans [ ((,) prop) <$> vals | (prop, vals) <- v' ]
+            where v' = concat [ zip prop (trans matrix) | (prop, matrix) <- v ]
    
 
-class Run a where
-   run :: (DB c v, IConnection cnn) => a c -> StateT (Cache c [v]) (ReaderT cnn IO) [a v]
-   default run :: (DB c v, IConnection cnn,
-                   GRun (Rep (a c)) (Rep (a v)) c v,
-                   Generic (a v),
-                   Generic (a c))
-                  => a c -> StateT (Cache c [v]) (ReaderT cnn IO) [a v]
-   run a = to <$> gRun (from a)
+unsafeFromJSON :: A.FromJSON a => A.Value -> a
+unsafeFromJSON a = 
+   case A.fromJSON a of
+      A.Error m -> error $ printf "Error when converting %s:\n%s" (show a) m
+      A.Success a -> a
 
 
-class GRun c' v' c v where
-   gRun :: (IConnection cnn) => c' p -> StateT (Cache c [v]) (ReaderT cnn IO) (v' p)
+instance DB Save SaveID where
+   
+   
+instance DB Load Value where
+   optimize = map (pure `first`)
+   sendSql (Load _ _ _) = True
+   sendSql _ = False
+   wrapVal = Value
+   wrapCnst (LVal a) = Value a
+   wrapCnst LNull = Null
+   exec (Load table column whereClause) = do
+      cnn <- ask
+      v <- lift $ withTransaction cnn (\cnn -> quickQuery cnn (printf "SELECT `%s` FROM `%s` WHERE %s" column table whereClause) [])
+      return v 
+   exec a = error $ printf "Error when executing Load %s." (show a)
+   toSqlVal obj =
+      case maybeM of
+         Just v  -> v
+         Nothing -> error $ printf "Expecting field type 'Load' but have %s." (show obj)
+      where 
+         al :: M.Map String A.Value
+         al = unsafeFromJSON obj
+         idx :: (A.FromJSON a) => A.Value -> Int -> a
+         idx c i = unsafeFromJSON (unsafeFromJSON c V.! i)      
+         maybeM = do
+            tag <- M.lookup "tag" al
+            contents <- M.lookup "contents" al
+            case unsafeFromJSON tag of
+               "Load" -> Just $ Load (contents `idx` 0) (contents `idx` 1) (contents `idx` 2)
+               "LVal" -> Just $ LVal $ aeson2sql contents
+               "LNull" -> Just LNull
+               _ -> Nothing
+   fromSqlVal (Value x) = A.toJSON $ M.fromList [("tag", A.toJSON "Value"), ("contents", sql2aeson x)]
+   fromSqlVal Null = A.toJSON $ M.fromList [("tag", A.toJSON "Null"), ("contents", A.toJSON ([] :: [()]))]
 
-instance GRun U1 U1 c v where
-   gRun _ = return U1
 
-instance (GRun c' v' c v) => GRun (M1 x y c') (M1 x y v') c v where
-   gRun (M1 c) = M1 <$> gRun c 
+class Matrix m where
+   verify :: m (m a) -> Maybe (Int, Int)
+   trans  :: m (m a) -> m (m a)
 
-instance (GRun c' v' c v, GRun cs' vs' c v) => GRun (c' :*: cs') (v' :*: vs') c v where
-   gRun (c :*: cs) = gRun c `mult` gRun cs
-      where mult = liftM2 (:*:)
-
-instance (GRun c' v' c v, GRun cs' vs' c v) => GRun (c' :+: cs') (v' :+: vs') c v where
-   gRun (L1 c) = L1 <$> gRun c
-   gRun (R1 c) = R1 <$> gRun c
-
-instance (DB c v, Eq c, Hashable c) => GRun (K1 x c) (K1 x v) c v where
-   gRun (K1 c) = K1 <$> exec c
-
+instance Matrix [] where
+   trans  = transpose
+   verify [] = Just (0,0)
+   verify [[]] = Nothing
+   verify l@[a]
+      | all (== fstRow) (map length l) = Just (length l,fstRow)
+      | otherwise = Nothing
+      where fstRow  = length a
+   
 {- 
 @
 
@@ -91,13 +175,3 @@ instance (DB c v, Eq c, Hashable c) => GRun (K1 x c) (K1 x v) c v where
    
 @
 -}
-
-class (Run a) => Save a v c s where
-   save :: a v -> s -> a c
-
-class (Run a) => Load a v c s where
-   load :: a v -> s -> a c
-
-class (Run a) => Delete a v c s where
-   delete :: a v -> s -> a c
-

@@ -34,8 +34,8 @@ testObj :: Test Load
 testObj = Test {
    a = Load "Test" "id" "id < 6",
    b = Load "Test" "f1" "id < 6",
-   c = SetVal 1,
-   d = SetNull
+   c = Const 1,
+   d = ConstNull
 }
    
 testSave :: Test Save

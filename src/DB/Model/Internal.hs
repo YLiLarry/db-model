@@ -43,14 +43,14 @@ instance (Field f, Generic (f x), A.GFromJSON (Rep (f x))) => A.FromJSON (f x)
 
 
 data Load x = Load String String String
-            | SetVal x
-            | SetNull 
+            | Const x
+            | ConstNull 
             deriving (Generic, Generic1, Show, Eq, Functor)
             
 instance Applicative Load where
-   pure = SetVal
-   (SetVal f) <*> (SetVal a) = (SetVal $ f a)
-   _ <*> _ = SetNull
+   pure = Const
+   (Const f) <*> (Const a) = (Const $ f a)
+   _ <*> _ = ConstNull
    
 data Save x = Save String String x
             | Ignore
@@ -147,8 +147,8 @@ instance DB Load Value where
    sendSql (Load _ _ _) = True
    sendSql _ = False
    wrapVal = Value
-   wrapCnst (SetVal a) = Value a
-   wrapCnst SetNull = Null
+   wrapCnst (Const a) = Value a
+   wrapCnst ConstNull = Null
    fromSqlVal (Value x) = [("tag", A.toJSON "Value"), ("contents", sql2aeson x)]
    fromSqlVal Null = [("tag", A.toJSON "Null"), ("contents", A.toJSON ([] :: [()]))]
    exec (Load table column whereClause) = do
@@ -182,8 +182,8 @@ instance Matrix [] where
    test :: Test Load
    test = Test {
       a = Load "Table" "Column" "id > 5",
-      b = SetVal 3,
-      c = SetNull
+      b = Const 3,
+      c = ConstNull
    }
    
    load test :: [Test Value]

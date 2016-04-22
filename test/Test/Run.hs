@@ -47,19 +47,19 @@ testSave = Test {
 }
 
 test :: IO ()
-test = hspec $ do
-   describe "Model.Internal" $ do
-      it "Test Load" $ do
-         conn <- connectSqlite3 "test/test.db"
-         print $ to testObj
-         r <- runReaderT (run $ to testObj) conn
-         print r
-         print $ typeOf testObj
-         print $ (from <$> r :: [Test Value])
-      it "Test Save" $ do
-         conn <- connectSqlite3 "test/test.db"
-         let (a,_) = L.partition (sendSql . snd) $ to testSave
-         print $ adjust a
-         r <- runReaderT (run $ to testSave) conn
-         print (from <$> r :: [Test LastID])
+test = do 
+   conn <- connectSqlite3 "test/test.db"
+   hspec $ do
+      describe "Model.Internal" $ do
+         it "Test Load" $ do
+            print $ to testObj
+            r <- runReaderT (run $ to testObj) conn
+            print r
+            print $ typeOf testObj
+            print $ (from <$> r :: [Test Value])
+         it "Test Save" $ do
+            let (a,_) = L.partition (sendSql . snd) $ to testSave
+            print $ adjust a
+            r <- runReaderT (run $ to testSave) conn
+            print (from <$> r :: [Test LastID])
       

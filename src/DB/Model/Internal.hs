@@ -25,9 +25,12 @@ import qualified Data.Map as M
 import DB.Model.Internal.Exception
 import DB.Model.Internal.TypeCast
 import qualified Data.Vector as V
-      
+import Data.Maybe
+import Control.Exception
+import GHC.IO.Exception
+
 class Model (a :: (* -> *) -> *)
-instance (Field f) => Model (a f)
+-- instance (Field f) => Model (a f)
 
 instance (Model a, Generic (a m), A.GToJSON (Rep (a m))) => A.ToJSON (a m)
 instance (Model a, Generic (a m), A.GFromJSON (Rep (a m))) => A.FromJSON (a m)
@@ -71,26 +74,29 @@ instance Applicative Value where
    _ <*> _ = Null
             
 throughMaybe :: (a -> b) -> Value a -> Value b
-throughMaybe f = fromMaybe . fmap f . toMaybe 
+throughMaybe f = maybe2value . fmap f . value2maybe 
    
-toMaybe :: Value a -> Maybe a
-toMaybe (Value x) = Just x
-toMaybe Null = Nothing
+value2maybe :: Value a -> Maybe a
+value2maybe (Value x) = Just x
+value2maybe Null = Nothing
 
-fromMaybe :: Maybe a -> Value a
-fromMaybe Nothing = Null
-fromMaybe (Just x) = Value x
+maybe2value :: Maybe a -> Value a
+maybe2value Nothing = Null
+maybe2value (Just x) = Value x
    
 data LastID x = ID Int 
               | Ignored
             deriving (Generic, Generic1, Show, Eq)
 
-class (Functor b, A.FromJSON (b A.Value), Show (b [SqlValue])) => DB b r | b -> r, r -> b where
+-- data Delete x = Delete String String ID
+              
+
+class (Functor b, A.FromJSON (b A.Value)) => DB b r | b -> r, r -> b where
    fromSqlVal :: r SqlValue -> [(String, A.Value)]
    wrapVal :: SqlValue -> r SqlValue
    wrapCnst :: b SqlValue -> r SqlValue
    sendSql :: b SqlValue -> Bool
-   adjust :: [(String, b SqlValue)] -> [([String], b [SqlValue])] 
+   optimize :: [(String, b SqlValue)] -> [([String], b [SqlValue])] 
 
    to :: (A.ToJSON (a b)) => a b -> [(String, b SqlValue)]
    to = map ((fmap aeson2sql . unsafeFromJSON) `second`) . M.toList . unsafeFromJSON . A.toJSON
@@ -98,18 +104,28 @@ class (Functor b, A.FromJSON (b A.Value), Show (b [SqlValue])) => DB b r | b -> 
    from :: (A.FromJSON (a r)) => [(String, r SqlValue)] -> a r
    from = unsafeFromJSON . A.toJSON . M.fromList . map ((M.fromList . fromSqlVal) `second`)
 
-   run :: (IConnection cnn) => [(String, b SqlValue)] -> ReaderT cnn IO [[(String, r SqlValue)]]
-   run a = map g <$> f <$> mapM (runKleisli . second . Kleisli $ exec) (adjust nonconstants)
+   runSql :: (IConnection cnn) => [(String, b SqlValue)] -> ReaderT cnn IO [[(String, r SqlValue)]]
+   runSql a = mapReaderT (>>= validate) $ map toR <$> retag <$> mapM (runKleisli . second . Kleisli $ exec) (optimize nonconstants)
+      
       where
-         (nonconstants, constants) = map (wrapCnst `second`) `second` partition (sendSql . snd) a
-         g :: [(String, SqlValue)] -> [(String, r SqlValue)]
-         g a = map (wrapVal `second`) a ++ constants
-         f :: [([String], [[SqlValue]])] -> [[(String, SqlValue)]]
-         f v = trans [ ((,) prop) <$> vals | (prop, vals) <- v' ]
+         (nonconstants, constants) = partition (sendSql . snd) a
+         toR :: [(String, SqlValue)] -> [(String, r SqlValue)]
+         toR a = map (wrapVal `second`) a ++ map (wrapCnst `second`) constants
+         retag :: [([String], [[SqlValue]])] -> [[(String, SqlValue)]]
+         retag v = trans [ ((,) prop) <$> vals | (prop, vals) <- v' ]
             where v' = concat [ zip prop (trans matrix) | (prop, matrix) <- v ]
+         validate :: [[(String, r SqlValue)]] -> IO [[(String, r SqlValue)]]
+         validate matrix
+            | isJust $ size matrix = return $ matrix
+            | otherwise = fail $ printf "Retrived records have different length.\n" 
    
    exec :: (IConnection cnn) => b [SqlValue] -> ReaderT cnn IO [[SqlValue]]
 
+   run :: (A.ToJSON (a b), A.FromJSON (a r), IConnection cnn, Show (a b)) => a b -> ReaderT cnn IO [a r]
+   run a = (map from <$> (handle report `mapReaderT` (runSql $ to a)))
+      where 
+         report :: IOException -> IO a
+         report e = fail $ printf "IO error in (run %s):\n\t%s" (show a) (ioe_description e)
 
 unsafeFromJSON :: A.FromJSON a => A.Value -> a
 unsafeFromJSON a = 
@@ -119,7 +135,7 @@ unsafeFromJSON a =
 
 
 instance DB Save LastID where
-   adjust = map combine . groupBy shouldCombine where 
+   optimize = map combine . groupBy shouldCombine where 
       shouldCombine :: (String, Save SqlValue) -> (String, Save SqlValue) -> Bool
       shouldCombine (_, Save t1 _ _) (_, Save t2 _ _) = t1 == t2
       combine :: [(String, Save SqlValue)] -> ([String], Save [SqlValue])
@@ -143,7 +159,7 @@ instance DB Save LastID where
          qqq = intercalate "," $ map (const "?") vals
    
 instance DB Load Value where
-   adjust = map (pure *** fmap pure)
+   optimize = map (pure *** fmap pure)
    sendSql (Load _ _ _) = True
    sendSql _ = False
    wrapVal = Value
@@ -158,17 +174,17 @@ instance DB Load Value where
       where stmt = printf "SELECT `%s` FROM `%s` WHERE %s" column table whereClause
 
 class Matrix m where
-   verify :: m (m a) -> Maybe (Int, Int)
+   size :: m (m a) -> Maybe (Int, Int)
    trans  :: m (m a) -> m (m a)
 
 instance Matrix [] where
    trans  = transpose
-   verify [] = Just (0,0)
-   verify [[]] = Nothing
-   verify l@[a]
-      | all (== fstRow) (map length l) = Just (length l,fstRow)
+   size [] = Just (0,0)
+   size [[]] = Nothing
+   size matrix
+      | all (== fstRow) (map length matrix) = Just (length matrix,fstRow)
       | otherwise = Nothing
-      where fstRow  = length a
+      where fstRow  = length $ head matrix
    
 {- 
 @

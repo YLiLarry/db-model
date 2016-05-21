@@ -22,26 +22,29 @@ data Test m = Test {
    b :: m String,
    c :: m Int,
    d :: m Int
-}
+} 
 
-instance Model Test
+deriving instance (Show (Test Load))
+deriving instance (Show (Test Save))
+
+instance Model Test 
 deriving instance Generic (Test m)
 deriving instance Show (Test Value)
 deriving instance Show (Test LastID)
 deriving instance Typeable Test
 
-testObj :: Test Load
-testObj = Test {
+testLoadObj :: Test Load
+testLoadObj = Test {
    a = Load "Test" "id" "id < 6",
    b = Load "Test" "f1" "id < 6",
    c = Const 1,
    d = ConstNull
-}
+} 
    
-testSave :: Test Save
-testSave = Test {
+testSaveObj :: Test Save
+testSaveObj = Test {
    a = Save "Test" "f2" 1,
-   b = Save "Test" "f1" "testSave",
+   b = Save "Test" "f1" "testSaveObj",
    c = Ignore,
    d = Ignore
 }
@@ -51,15 +54,21 @@ test = do
    conn <- connectSqlite3 "test/test.db"
    hspec $ do
       describe "Model.Internal" $ do
-         it "Test Load" $ do
-            print $ to testObj
-            r <- runReaderT (run $ to testObj) conn
-            print r
-            print $ typeOf testObj
-            print $ (from <$> r :: [Test Value])
-         it "Test Save" $ do
-            let (a,_) = L.partition (sendSql . snd) $ to testSave
-            print $ adjust a
-            r <- runReaderT (run $ to testSave) conn
-            print (from <$> r :: [Test LastID])
+         it "Test Load" $ testLoad conn
+         it "Test Save" $ testSave conn
       
+      describe "Benchmark" $ do
+         it "Bench Load" $ do
+            replicateM_ 10000 $ testLoad conn
+            
+
+testLoad :: Connection -> IO ()               
+testLoad conn = do
+   r <- runReaderT (run testLoadObj) conn
+   print r
+
+testSave :: Connection -> IO ()   
+testSave conn = do
+   r <- runReaderT (run testSaveObj) conn
+   print r
+   

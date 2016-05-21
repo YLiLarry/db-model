@@ -1,0 +1,3 @@
+[submodule "submodule/generic-deriving"]
+	path = submodule/generic-deriving
+	url = https://github.com/dreixel/generic-deriving.git

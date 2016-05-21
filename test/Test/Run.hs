@@ -1,8 +1,8 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE FlexibleInstances #-}
-{-# LANGUAGE MultiParamTypeClasses #-}
+-- {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE StandaloneDeriving #-}
-{-# LANGUAGE FlexibleContexts #-}
+-- {-# LANGUAGE FlexibleContexts #-}
 
 module Test.Run where
 
@@ -22,21 +22,14 @@ data Test m = Test {
    b :: m String,
    c :: m Int,
    d :: m Int
-} 
-
-deriving instance (Show (Test Load))
-deriving instance (Show (Test Save))
+} deriving (Generic)
 
 instance Model Test 
-deriving instance Generic (Test m)
-deriving instance Show (Test Value)
-deriving instance Show (Test LastID)
-deriving instance Typeable Test
 
 testLoadObj :: Test Load
 testLoadObj = Test {
    a = Load "Test" "id" "id < 6",
-   b = Load "Test" "f1" "id < 6",
+   b = Load "Test" "f1" "id < 5",
    c = Const 1,
    d = ConstNull
 } 

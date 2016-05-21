@@ -1,4 +1,4 @@
-{-# LANGUAGE MultiParamTypeClasses #-}
+-- {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE UndecidableInstances #-}
@@ -28,12 +28,13 @@ import qualified Data.Vector as V
 import Data.Maybe
 import Control.Exception
 import GHC.IO.Exception
+import Generics.Deriving.Show
 
 class Model (a :: (* -> *) -> *)
--- instance (Field f) => Model (a f)
-
 instance (Model a, Generic (a m), A.GToJSON (Rep (a m))) => A.ToJSON (a m)
 instance (Model a, Generic (a m), A.GFromJSON (Rep (a m))) => A.FromJSON (a m)
+instance (Model x, Generic (x a), GShow' (Rep (x a))) => GShow (x a)
+
 
 class Field (f :: * -> *)
 instance Field Load
@@ -43,8 +44,8 @@ instance Field LastID
 
 instance (Field f, Generic (f x), A.GToJSON (Rep (f x))) => A.ToJSON (f x)
 instance (Field f, Generic (f x), A.GFromJSON (Rep (f x))) => A.FromJSON (f x)
+instance (Field f, Generic (f x), GShow' (Rep (f x))) => GShow (f x)
 
-instance deriving Model x => Show (Load x)
 
 data Load x = Load String String String
             | Const x
@@ -118,15 +119,15 @@ class (Functor b, A.FromJSON (b A.Value)) => DB b r | b -> r, r -> b where
          validate :: [[(String, r SqlValue)]] -> IO [[(String, r SqlValue)]]
          validate matrix
             | isJust $ size matrix = return $ matrix
-            | otherwise = fail $ printf "Retrived records have different length.\n" 
+            | otherwise = fail $ printf "Retrieved records in inconsistent length.\n" 
    
    exec :: (IConnection cnn) => b [SqlValue] -> ReaderT cnn IO [[SqlValue]]
 
-   run :: (A.ToJSON (a b), A.FromJSON (a r), IConnection cnn, Show (a b)) => a b -> ReaderT cnn IO [a r]
+   run :: (A.ToJSON (a b), A.FromJSON (a r), IConnection cnn, GShow (a b)) => a b -> ReaderT cnn IO [a r]
    run a = (map from <$> (handle report `mapReaderT` (runSql $ to a)))
       where 
          report :: IOException -> IO a
-         report e = fail $ printf "IO error in (run %s):\n\t%s" (show a) (ioe_description e)
+         report e = fail $ printf "IO error in (run %s):\n\t%s" (gshow a) (ioe_description e)
 
 unsafeFromJSON :: A.FromJSON a => A.Value -> a
 unsafeFromJSON a = 
@@ -187,6 +188,9 @@ instance Matrix [] where
       | otherwise = Nothing
       where fstRow  = length $ head matrix
    
+instance (Model m, Generic (m a), GShow' (Rep (m a))) => Show (m a) where
+   show = gshow
+
 {- 
 @
 

@@ -44,6 +44,7 @@ instance Field LastID
 instance (Field f, Generic (f x), A.GToJSON (Rep (f x))) => A.ToJSON (f x)
 instance (Field f, Generic (f x), A.GFromJSON (Rep (f x))) => A.FromJSON (f x)
 
+instance deriving Model x => Show (Load x)
 
 data Load x = Load String String String
             | Const x

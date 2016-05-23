@@ -1,8 +1,6 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE FlexibleInstances #-}
--- {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE StandaloneDeriving #-}
--- {-# LANGUAGE FlexibleContexts #-}
 
 module Test.Run where
 
@@ -29,8 +27,8 @@ instance Model Test
 
 testSub :: Test Load
 testSub = Test {
-   a = Load "Test" "id" "id < 6",
-   b = Load "Test" "f1" "id < 6",
+   a = Load "Test" "id" "id = 1000",
+   b = Load "Test" "f1" "id = 1000",
    c = Const 1,
    d = ConstNull,
    e = ConstNull
@@ -39,8 +37,8 @@ testSub = Test {
 
 testLoadObj :: Test Load
 testLoadObj = Test {
-   a = Load "Test" "id" "id < 6",
-   b = Load "Test" "f1" "id < 6",
+   a = Load "Test" "id" "id < 1000",
+   b = Load "Test" "f1" "id < 1000",
    c = Const 1,
    d = ConstNull,
    e = LoadR testSub
@@ -57,20 +55,9 @@ testSaveObj = Test {
 
 test :: IO ()
 test = do 
-   conn <- connectSqlite3 "test/test.db"
+   conn <- connectSqlite3 "benchmark/benchmark.db"
    hspec $ do
-      describe "Model.Internal" $ do
-         it "Test Load" $ testLoad conn
-         it "Test Save" $ testSave conn
-          
-
-testLoad :: Connection -> IO ()               
-testLoad conn = do
-   r <- runReaderT (run testLoadObj) conn
-   print $ length r
-
-testSave :: Connection -> IO ()   
-testSave conn = do
-   r <- runReaderT (run testSaveObj) conn
-   print $ length r
-   
+      describe "Benchmark" $ do
+         it "Load" $ do
+            print =<< length <$> (runReaderT (run testLoadObj) conn)
+            

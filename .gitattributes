@@ -1,0 +1,2 @@
+test/test.db filter=lfs diff=lfs merge=lfs -text
+benchmark/test.db filter=lfs diff=lfs merge=lfs -text

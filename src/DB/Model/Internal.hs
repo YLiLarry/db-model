@@ -1,4 +1,3 @@
--- {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE UndecidableInstances #-}
@@ -8,6 +7,7 @@
 {-# LANGUAGE FunctionalDependencies #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE DeriveFunctor #-}
+{-# LANGUAGE AutoDeriveTypeable #-}
 
 module DB.Model.Internal where
 
@@ -17,10 +17,12 @@ import Control.Monad.State
 import Control.Monad.Reader
 import Database.HDBC as D hiding (run)
 import Text.Printf
+import           Data.Aeson (fromJSON, toJSON, FromJSON, ToJSON, GToJSON, GFromJSON)
 import qualified Data.Aeson as A
 import Control.Arrow
 import Data.List as L
 import Data.List.Split as L
+import           Data.Map (Map)
 import qualified Data.Map as M
 import DB.Model.Internal.Exception
 import DB.Model.Internal.TypeCast
@@ -29,25 +31,39 @@ import Data.Maybe
 import Control.Exception
 import GHC.IO.Exception
 import Generics.Deriving.Show
+import Data.Typeable
 
 class Model (a :: (* -> *) -> *)
-instance (Model a, Generic (a m), A.GToJSON (Rep (a m))) => A.ToJSON (a m)
-instance (Model a, Generic (a m), A.GFromJSON (Rep (a m))) => A.FromJSON (a m)
-instance (Model x, Generic (x a), GShow' (Rep (x a))) => GShow (x a)
+instance {-# OVERLAPPABLE #-} (Model a, Generic (a m), GToJSON (Rep (a m))) => ToJSON (a m)
+instance {-# OVERLAPPABLE #-} (Model a, Generic (a m), GFromJSON (Rep (a m))) => FromJSON (a m)
+instance {-# OVERLAPPABLE #-} (Model x, Generic (x a), GShow' (Rep (x a))) => GShow (x a)
 
 
-class Field (f :: * -> *)
+class (Applicative f, 
+       Typeable f, 
+       Generic (f A.Value), 
+       Generic (f SqlValue),
+       GToJSON (Rep (f A.Value)),
+       GToJSON (Rep (f SqlValue)),
+       GFromJSON (Rep (f A.Value)),
+       GFromJSON (Rep (f SqlValue))) => Field (f :: * -> *)
+
 instance Field Load
 instance Field Value
 instance Field Save
 instance Field LastID
 
-instance (Field f, Generic (f x), A.GToJSON (Rep (f x))) => A.ToJSON (f x)
-instance (Field f, Generic (f x), A.GFromJSON (Rep (f x))) => A.FromJSON (f x)
-instance (Field f, Generic (f x), GShow' (Rep (f x))) => GShow (f x)
+instance {-# OVERLAPPABLE #-} (Field f, Generic (f x), GToJSON (Rep (f x))) => ToJSON (f x)
+instance {-# OVERLAPPABLE #-} (Field f, Generic (f x), GFromJSON (Rep (f x))) => FromJSON (f x)
+instance {-# OVERLAPPABLE #-} (Field f, Generic (f x), GShow' (Rep (f x))) => GShow (f x)
 
+instance ToJSON SqlValue where
+   toJSON = sql2aeson
+instance FromJSON SqlValue where
+   parseJSON = return . aeson2sql
 
 data Load x = Load String String String
+            | LoadR x
             | Const x
             | ConstNull 
             deriving (Generic, Generic1, Show, Eq, Functor)
@@ -67,6 +83,7 @@ instance Applicative Save where
    _ <*> _ = Ignore
    
 data Value x = Value x
+             | Values [x]
              | Null
             deriving (Generic, Generic1, Show, Eq, Functor)
 
@@ -86,71 +103,89 @@ maybe2value :: Maybe a -> Value a
 maybe2value Nothing = Null
 maybe2value (Just x) = Value x
    
-data LastID x = ID Int 
+data LastID x = ID Integer
               | Ignored
-            deriving (Generic, Generic1, Show, Eq)
+            deriving (Generic, Generic1, Show, Eq, Functor)
+instance Applicative LastID
+-- data Delete x = Delete String String String 
 
--- data Delete x = Delete String String ID
-              
-
-class (Functor b, A.FromJSON (b A.Value)) => DB b r | b -> r, r -> b where
+class (Field b, Field r) => DB b r | b -> r, r -> b where
    fromSqlVal :: r SqlValue -> [(String, A.Value)]
-   wrapVal :: SqlValue -> r SqlValue
-   wrapCnst :: b SqlValue -> r SqlValue
-   sendSql :: b SqlValue -> Bool
-   optimize :: [(String, b SqlValue)] -> [([String], b [SqlValue])] 
+   wrapCnst :: b v -> r v
+   wrapVal :: A.Value -> r A.Value
+   wrapVals :: [A.Value] -> r A.Value
+   sendSql :: b x -> Bool
+   sendSqlR :: b x -> Bool
+   optimize :: [(String, b v)] -> [([String], b [v])] 
+   combine :: [b v] -> b v
+   unwrap :: (Show v) => b v -> v
 
-   to :: (A.ToJSON (a b)) => a b -> [(String, b SqlValue)]
-   to = map ((fmap aeson2sql . unsafeFromJSON) `second`) . M.toList . unsafeFromJSON . A.toJSON
+   aeson2kvp :: A.Value -> [(String, b A.Value)]
+   aeson2kvp = M.toList . unsafeFromJSON
+   
+   kvp2aeson :: [(String, r A.Value)] -> A.Value
+   kvp2aeson = toJSON . M.fromList
 
-   from :: (A.FromJSON (a r)) => [(String, r SqlValue)] -> a r
-   from = unsafeFromJSON . A.toJSON . M.fromList . map ((M.fromList . fromSqlVal) `second`)
+   toDB :: (ToJSON (a b), IConnection cnn) => a b -> ReaderT cnn IO [(String, b A.Value)]
+   toDB = return . aeson2kvp . toJSON
 
-   runSql :: (IConnection cnn) => [(String, b SqlValue)] -> ReaderT cnn IO [[(String, r SqlValue)]]
-   runSql a = mapReaderT (>>= validate) $ map toR <$> retag <$> mapM (runKleisli . second . Kleisli $ exec) (optimize nonconstants)
-      
+   fromDB :: (FromJSON (a r), Typeable (a r)) => [(String, r A.Value)] -> a r
+   fromDB = unsafeFromJSON . kvp2aeson
+
+   runSql :: (IConnection cnn) => [(String, b A.Value)] -> ReaderT cnn IO [[(String, r A.Value)]]
+   runSql a = do
+      recurisveResults <- mapM (sndM loadR) recurisve
+      loadonceResults <- retag <$> mapM (sndM exec) (optimize $ map (fmap aeson2sql `second`) loadonce)
+      let constantResults = (map (wrapCnst `second`) constants) ++ recurisveResults :: [(String, r A.Value)]
+      liftIO $ validate $ map (addConsts constantResults) loadonceResults
       where
          (nonconstants, constants) = partition (sendSql . snd) a
-         toR :: [(String, SqlValue)] -> [(String, r SqlValue)]
-         toR a = map (wrapVal `second`) a ++ map (wrapCnst `second`) constants
+         (recurisve, loadonce) = partition (sendSqlR . snd) nonconstants
+         loadR :: (IConnection cnn) => b A.Value -> ReaderT cnn IO (r A.Value)
+         loadR v = do 
+            r <- runSql $ (aeson2kvp $ unwrap v :: [(String, b A.Value)])
+            return $ wrapVals $ map kvp2aeson r
+         addConsts :: [(String, r A.Value)] -> [(String, SqlValue)] -> [(String, r A.Value)]
+         addConsts consts a = map ((wrapVal . sql2aeson) `second`) a ++ consts
          retag :: [([String], [[SqlValue]])] -> [[(String, SqlValue)]]
          retag v = trans [ ((,) prop) <$> vals | (prop, vals) <- v' ]
             where v' = concat [ zip prop (trans matrix) | (prop, matrix) <- v ]
-         validate :: [[(String, r SqlValue)]] -> IO [[(String, r SqlValue)]]
+         validate :: [[(String, r A.Value)]] -> IO [[(String, r A.Value)]]
          validate matrix
             | isJust $ size matrix = return $ matrix
             | otherwise = fail $ printf "Retrieved records in inconsistent length.\n" 
    
    exec :: (IConnection cnn) => b [SqlValue] -> ReaderT cnn IO [[SqlValue]]
 
-   run :: (A.ToJSON (a b), A.FromJSON (a r), IConnection cnn, GShow (a b)) => a b -> ReaderT cnn IO [a r]
-   run a = (map from <$> (handle report `mapReaderT` (runSql $ to a)))
+   run :: (ToJSON (a b), FromJSON (a r), IConnection cnn, GShow (a b), Typeable (a r)) => a b -> ReaderT cnn IO [a r]
+   run a = (map fromDB <$> (handle report `mapReaderT` (runSql =<< toDB a)))
       where 
          report :: IOException -> IO a
          report e = fail $ printf "IO error in (run %s):\n\t%s" (gshow a) (ioe_description e)
 
-unsafeFromJSON :: A.FromJSON a => A.Value -> a
+unsafeFromJSON :: (Typeable a, FromJSON a) => A.Value -> a
 unsafeFromJSON a = 
-   case A.fromJSON a of
-      A.Error m -> error $ printf "Error when converting %s:\n%s" (show a) m
+   case r of
+      A.Error m -> error $ printf "Error when converting %s to %s:\n%s" (show a) (show $ typeOf r) m
       A.Success a -> a
+   where r = fromJSON a
 
 
 instance DB Save LastID where
    optimize = map combine . groupBy shouldCombine where 
-      shouldCombine :: (String, Save SqlValue) -> (String, Save SqlValue) -> Bool
+      shouldCombine :: (String, Save v) -> (String, Save v) -> Bool
       shouldCombine (_, Save t1 _ _) (_, Save t2 _ _) = t1 == t2
-      combine :: [(String, Save SqlValue)] -> ([String], Save [SqlValue])
+      combine :: [(String, Save v)] -> ([String], Save [v])
       combine a = (map fst a, Save t c v) where
          (Save t _ v) = sequenceA $ map snd a
          c = intercalate "," [ c | (_, Save _ c _) <- a ]
-      
    sendSql (Save _ _ _) = True
    sendSql _ = False
-   wrapVal = ID . D.fromSql
+   sendSqlR _ = False
    wrapCnst _ = Ignored
-   fromSqlVal (ID x) = [("tag", A.toJSON "ID"), ("contents", A.toJSON x)]
-   fromSqlVal Ignored = [("tag", A.toJSON "Ignored"), ("contents", A.toJSON ([] :: [()]))]
+   wrapVal = ID . unsafeFromJSON
+   fromSqlVal (ID x) = [("tag", toJSON "ID"), ("contents", toJSON x)]
+   fromSqlVal Ignored = [("tag", toJSON "Ignored"), ("contents", toJSON ([] :: [()]))]
    exec (Save table column vals) = do
       cnn <- ask
       liftIO $ withTransaction cnn (\cnn -> quickQuery cnn stmt vals)
@@ -163,17 +198,23 @@ instance DB Save LastID where
 instance DB Load Value where
    optimize = map (pure *** fmap pure)
    sendSql (Load _ _ _) = True
+   sendSql (LoadR _) = True
    sendSql _ = False
-   wrapVal = Value
+   sendSqlR (LoadR _) = True
+   sendSqlR _ = False
    wrapCnst (Const a) = Value a
    wrapCnst ConstNull = Null
-   fromSqlVal (Value x) = [("tag", A.toJSON "Value"), ("contents", sql2aeson x)]
-   fromSqlVal Null = [("tag", A.toJSON "Null"), ("contents", A.toJSON ([] :: [()]))]
+   wrapVal = Value 
+   wrapVals = Values
+   fromSqlVal (Value x) = [("tag", toJSON "Value"), ("contents", sql2aeson x)]
+   fromSqlVal Null = [("tag", toJSON "Null"), ("contents", toJSON ([] :: [()]))]
    exec (Load table column whereClause) = do
       cnn <- ask
       v <- lift $ withTransaction cnn (\cnn -> quickQuery cnn stmt [])
       return v 
       where stmt = printf "SELECT `%s` FROM `%s` WHERE %s" column table whereClause
+   unwrap (LoadR x) = x
+   unwrap x = error $ show x
 
 class Matrix m where
    size :: m (m a) -> Maybe (Int, Int)
@@ -216,3 +257,6 @@ instance (Model m, Generic (m a), GShow' (Rep (m a))) => Show (m a) where
    
 @
 -}
+
+sndM :: (Monad m) => (b -> m c) -> (a,b) -> m (a,c)
+sndM = runKleisli . second . Kleisli

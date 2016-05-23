@@ -32,8 +32,8 @@ testSub = Test {
    a = Load "Test" "id" "id < 6",
    b = Load "Test" "f1" "id < 6",
    c = LoadV 1,
-   d = LoadNone,
-   e = LoadNone
+   d = LoadN,
+   e = LoadN
 }
    
 
@@ -42,7 +42,7 @@ testLoadObj = Test {
    a = Load "Test" "id" "id < 6",
    b = Load "Test" "f1" "id < 6",
    c = LoadV 1,
-   d = LoadNone,
+   d = LoadN,
    e = LoadR testSub
 }
    
@@ -50,9 +50,9 @@ testSaveObj :: Test Save
 testSaveObj = Test {
    a = Save "Test" "f2" 1,
    b = Save "Test" "f1" "testSaveObj",
-   c = Ignore,
-   d = Ignore,
-   e = Ignore
+   c = SaveN,
+   d = SaveN,
+   e = SaveN
 }
 
 test :: IO ()

@@ -29,13 +29,13 @@ testLoadObj = Test {
    a = Load "Test" "id" "id <= 100000",
    b = Load "Test" "f1" "id <= 100000",
    c = LoadV 1,
-   d = LoadNone,
+   d = LoadN,
    e = LoadR $ Test {
       a = Load "Test" "id" "id <= 100000",
       b = Load "Test" "f1" "id <= 100000",
       c = LoadV 1,
-      d = LoadNone,
-      e = LoadNone
+      d = LoadN,
+      e = LoadN
    }
 }
    
@@ -43,14 +43,14 @@ testSaveObj :: Test Save
 testSaveObj = Test {
    a = Save "Test" "f2" 1,
    b = Save "Test" "f1" "testSaveObj",
-   c = Ignore,
-   d = Ignore,
+   c = SaveN,
+   d = SaveN,
    e = SaveR $ Test {
       a = Save "Test" "f2" 1,
       b = Save "Test" "f1" "testSaveObj",
-      c = Ignore,
-      d = Ignore,
-      e = Ignore
+      c = SaveN,
+      d = SaveN,
+      e = SaveN
    }
 }
 

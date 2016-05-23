@@ -39,7 +39,7 @@ instance {-# OVERLAPPABLE #-} (Model a, Generic (a m), GFromJSON (Rep (a m))) =>
 instance {-# OVERLAPPABLE #-} (Model x, Generic (x a), GShow' (Rep (x a))) => GShow (x a)
 
 
-class (Applicative f, 
+class (Functor f, 
        Typeable f, 
        Generic (f A.Value), 
        Generic (f SqlValue),
@@ -63,52 +63,57 @@ instance FromJSON SqlValue where
    parseJSON = return . aeson2sql
 
 data Load x = Load String String String
-            | LoadR x
             | LoadV x
-            | LoadNone 
+            | LoadR x
+            | LoadN 
             deriving (Generic, Generic1, Show, Eq, Functor)
             
 instance Applicative Load where
    pure = LoadV
    (LoadV f) <*> (LoadV a) = (LoadV $ f a)
-   _ <*> _ = LoadNone
+   (LoadR f) <*> (LoadR a) = (LoadR $ f a)
+   _ <*> _ = LoadN
    
 data Save x = Save String String x
             | SaveR x
-            | Ignore
+            | SaveN
             deriving (Generic, Generic1, Show, Eq, Functor)
 
 instance Applicative Save where
    pure = Save "" ""
    (Save table column f) <*> (Save _ _ a) = (Save table column $ f a)
-   _ <*> _ = Ignore
+   _ <*> _ = SaveN
    
 data Value x = Value x
              | Values [x]
-             | None
+             | ValueN
             deriving (Generic, Generic1, Show, Eq, Functor)
 
 instance Applicative Value where
    pure = Value
    (Value f) <*> (Value a) = (Value $ f a)
-   _ <*> _ = None
+   _ <*> _ = ValueN
             
 throughMaybe :: (a -> b) -> Value a -> Value b
 throughMaybe f = maybe2value . fmap f . value2maybe 
    
 value2maybe :: Value a -> Maybe a
 value2maybe (Value x) = Just x
-value2maybe None = Nothing
+value2maybe ValueN = Nothing
 
 maybe2value :: Maybe a -> Value a
-maybe2value Nothing = None
+maybe2value Nothing = ValueN
 maybe2value (Just x) = Value x
    
 data ID x = ID Integer
-          | Ignored
+          | IDN
          deriving (Generic, Generic1, Show, Eq, Functor)
 instance Applicative ID
--- data Delete x = Delete String String String 
+
+data Delete x = Delete String String String 
+              | DeleteN
+            deriving (Generic, Generic1, Show, Eq, Functor)
+instance Applicative Delete 
 
 class (Field b, Field r) => DB b r | b -> r, r -> b where
    fromSqlVal :: r SqlValue -> [(String, A.Value)]
@@ -183,10 +188,10 @@ instance DB Save ID where
    sendSql (Save _ _ _) = True
    sendSql _ = False
    sendSqlR _ = False
-   wrapCnst _ = Ignored
+   wrapCnst _ = IDN
    wrapVal = ID . unsafeFromJSON
    fromSqlVal (ID x) = [("tag", toJSON "ID"), ("contents", toJSON x)]
-   fromSqlVal Ignored = [("tag", toJSON "Ignored"), ("contents", toJSON ([] :: [()]))]
+   fromSqlVal IDN = [("tag", toJSON "IDN"), ("contents", toJSON ([] :: [()]))]
    exec (Save table column vals) = do
       cnn <- ask
       liftIO $ withTransaction cnn (\cnn -> quickQuery cnn stmt vals)
@@ -204,11 +209,11 @@ instance DB Load Value where
    sendSqlR (LoadR _) = True
    sendSqlR _ = False
    wrapCnst (LoadV a) = Value a
-   wrapCnst LoadNone = None
+   wrapCnst LoadN = ValueN
    wrapVal = Value 
    wrapVals = Values
    fromSqlVal (Value x) = [("tag", toJSON "Value"), ("contents", sql2aeson x)]
-   fromSqlVal None = [("tag", toJSON "None"), ("contents", toJSON ([] :: [()]))]
+   fromSqlVal ValueN = [("tag", toJSON "ValueN"), ("contents", toJSON ([] :: [()]))]
    exec (Load table column whereClause) = do
       cnn <- ask
       v <- lift $ withTransaction cnn (\cnn -> quickQuery cnn stmt [])
@@ -246,7 +251,7 @@ instance (Model m, Generic (m a), GShow' (Rep (m a))) => Show (m a) where
    test = Test {
       a = Load "Table" "Column" "id > 5",
       b = LoadV 3,
-      c = LoadNone
+      c = LoadN
    }
    
    load test :: [Test Value]

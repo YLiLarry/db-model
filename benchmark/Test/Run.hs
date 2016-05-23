@@ -24,6 +24,7 @@ data Test m = Test {
 } deriving (Generic)
 instance Model Test 
 
+
 testLoadObj :: Test Load
 testLoadObj = Test {
    a = Load "Test" "id" "id <= 100000",

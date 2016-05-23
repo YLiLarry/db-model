@@ -51,7 +51,7 @@ class (Functor f,
 instance Field Load
 instance Field Value
 instance Field Save
-instance Field ID
+instance Field Key
 
 instance {-# OVERLAPPABLE #-} (Field f, Generic (f x), GToJSON (Rep (f x))) => ToJSON (f x)
 instance {-# OVERLAPPABLE #-} (Field f, Generic (f x), GFromJSON (Rep (f x))) => FromJSON (f x)
@@ -71,10 +71,11 @@ data Load x = Load String String String
 instance Applicative Load where
    pure = LoadV
    (LoadV f) <*> (LoadV a) = (LoadV $ f a)
-   (LoadR f) <*> (LoadR a) = (LoadR $ f a)
+   (LoadV f) <*> (LoadR a) = (LoadR $ f a)
    _ <*> _ = LoadN
    
 data Save x = Save String String x
+            | Save_ x
             | SaveR x
             | SaveN
             deriving (Generic, Generic1, Show, Eq, Functor)
@@ -82,6 +83,7 @@ data Save x = Save String String x
 instance Applicative Save where
    pure = Save "" ""
    (Save table column f) <*> (Save _ _ a) = (Save table column $ f a)
+   (Save table column f) <*> (SaveR a) = (SaveR $ f a)
    _ <*> _ = SaveN
    
 data Value x = Value x
@@ -92,6 +94,7 @@ data Value x = Value x
 instance Applicative Value where
    pure = Value
    (Value f) <*> (Value a) = (Value $ f a)
+   (Value f) <*> (Values a) = (Values $ map f a)
    _ <*> _ = ValueN
             
 throughMaybe :: (a -> b) -> Value a -> Value b
@@ -105,15 +108,17 @@ maybe2value :: Maybe a -> Value a
 maybe2value Nothing = ValueN
 maybe2value (Just x) = Value x
    
-data ID x = ID Integer
-          | IDN
+data Key x = Key Integer
+           | Key_ x
+           | Keys [x]
+           | KeyN
          deriving (Generic, Generic1, Show, Eq, Functor)
-instance Applicative ID
-
+         
 data Delete x = Delete String String String 
               | DeleteN
             deriving (Generic, Generic1, Show, Eq, Functor)
-instance Applicative Delete 
+
+data None x = None deriving (Generic, Generic1, Show, Eq, Functor)
 
 class (Field b, Field r) => DB b r | b -> r, r -> b where
    fromSqlVal :: r SqlValue -> [(String, A.Value)]
@@ -123,8 +128,7 @@ class (Field b, Field r) => DB b r | b -> r, r -> b where
    sendSql :: b x -> Bool
    sendSqlR :: b x -> Bool
    optimize :: [(String, b v)] -> [([String], b [v])] 
-   combine :: [b v] -> b v
-   unwrap :: (Show v) => b v -> v
+   unsafeUnwrap :: (Show v) => b v -> v
 
    aeson2kvp :: A.Value -> [(String, b A.Value)]
    aeson2kvp = M.toList . unsafeFromJSON
@@ -149,7 +153,7 @@ class (Field b, Field r) => DB b r | b -> r, r -> b where
          (recurisve, loadonce) = partition (sendSqlR . snd) nonconstants
          loadR :: (IConnection cnn) => b A.Value -> ReaderT cnn IO (r A.Value)
          loadR v = do 
-            r <- runSql $ (aeson2kvp $ unwrap v :: [(String, b A.Value)])
+            r <- runSql $ (aeson2kvp $ unsafeUnwrap v :: [(String, b A.Value)])
             return $ wrapVals $ map kvp2aeson r
          addConsts :: [(String, r A.Value)] -> [(String, SqlValue)] -> [(String, r A.Value)]
          addConsts consts a = map ((wrapVal . sql2aeson) `second`) a ++ consts
@@ -177,7 +181,7 @@ unsafeFromJSON a =
    where r = fromJSON a
 
 
-instance DB Save ID where
+instance DB Save Key where
    optimize = map combine . groupBy shouldCombine where 
       shouldCombine :: (String, Save v) -> (String, Save v) -> Bool
       shouldCombine (_, Save t1 _ _) (_, Save t2 _ _) = t1 == t2
@@ -186,12 +190,16 @@ instance DB Save ID where
          (Save t _ v) = sequenceA $ map snd a
          c = intercalate "," [ c | (_, Save _ c _) <- a ]
    sendSql (Save _ _ _) = True
+   sendSql (SaveR _) = True
    sendSql _ = False
+   sendSqlR (SaveR _) = True
    sendSqlR _ = False
-   wrapCnst _ = IDN
-   wrapVal = ID . unsafeFromJSON
-   fromSqlVal (ID x) = [("tag", toJSON "ID"), ("contents", toJSON x)]
-   fromSqlVal IDN = [("tag", toJSON "IDN"), ("contents", toJSON ([] :: [()]))]
+   wrapCnst (Save_ a) = Key_ a
+   wrapCnst _ = KeyN
+   wrapVal = Key . unsafeFromJSON
+   wrapVals = Keys
+   fromSqlVal (Key x) = [("tag", toJSON "Key"), ("contents", toJSON x)]
+   fromSqlVal KeyN = [("tag", toJSON "KeyN"), ("contents", toJSON ([] :: [()]))]
    exec (Save table column vals) = do
       cnn <- ask
       liftIO $ withTransaction cnn (\cnn -> quickQuery cnn stmt vals)
@@ -200,6 +208,7 @@ instance DB Save ID where
       where 
          stmt = printf "INSERT INTO `%s` (%s) VALUES (%s)" table column qqq
          qqq = intercalate "," $ map (const "?") vals
+   unsafeUnwrap (SaveR a) = a
    
 instance DB Load Value where
    optimize = map (pure *** fmap pure)
@@ -219,8 +228,7 @@ instance DB Load Value where
       v <- lift $ withTransaction cnn (\cnn -> quickQuery cnn stmt [])
       return v 
       where stmt = printf "SELECT `%s` FROM `%s` WHERE %s" column table whereClause
-   unwrap (LoadR x) = x
-   unwrap x = error $ show x
+   unsafeUnwrap (LoadR x) = x
 
 class Matrix m where
    size :: m (m a) -> Maybe (Int, Int)

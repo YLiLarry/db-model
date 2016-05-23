@@ -26,24 +26,28 @@ data Test m = Test {
 } deriving (Generic)
 instance Model Test 
 
-
-testSub :: Test Load
-testSub = Test {
-   a = Load "Test" "id" "id < 6",
-   b = Load "Test" "f1" "id < 6",
-   c = LoadV 1,
-   d = LoadN,
-   e = LoadN
+testValueObj :: Test Value
+testValueObj = Test {
+   a = Value 1,
+   b = Value "test",
+   c = Value 2,
+   d = Value 3,
+   e = ValueN
 }
-   
 
 testLoadObj :: Test Load
 testLoadObj = Test {
-   a = Load "Test" "id" "id < 6",
-   b = Load "Test" "f1" "id < 6",
+   a = Load "Test" "id" "id <= 100000",
+   b = Load "Test" "f1" "id <= 100000",
    c = LoadV 1,
    d = LoadN,
-   e = LoadR testSub
+   e = LoadR $ Test {
+      a = Load "Test" "id" "f1 = 'testSaveObjRecursive'",
+      b = Load "Test" "f1" "f1 = 'testSaveObjRecursive'",
+      c = LoadV 1,
+      d = LoadN,
+      e = LoadN
+   }
 }
    
 testSaveObj :: Test Save
@@ -52,7 +56,13 @@ testSaveObj = Test {
    b = Save "Test" "f1" "testSaveObj",
    c = SaveN,
    d = SaveN,
-   e = SaveN
+   e = SaveR $ Test {
+      a = Save "Test" "f2" 1,
+      b = Save "Test" "f1" "testSaveObjRecursive",
+      c = SaveN,
+      d = SaveN,
+      e = SaveN
+   }
 }
 
 test :: IO ()
@@ -72,5 +82,5 @@ testLoad conn = do
 testSave :: Connection -> IO ()   
 testSave conn = do
    r <- runReaderT (run testSaveObj) conn
-   print $ length r
+   print $ r
    

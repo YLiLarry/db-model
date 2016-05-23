@@ -51,7 +51,7 @@ class (Applicative f,
 instance Field Load
 instance Field Value
 instance Field Save
-instance Field LastID
+instance Field ID
 
 instance {-# OVERLAPPABLE #-} (Field f, Generic (f x), GToJSON (Rep (f x))) => ToJSON (f x)
 instance {-# OVERLAPPABLE #-} (Field f, Generic (f x), GFromJSON (Rep (f x))) => FromJSON (f x)
@@ -64,16 +64,17 @@ instance FromJSON SqlValue where
 
 data Load x = Load String String String
             | LoadR x
-            | Const x
-            | ConstNull 
+            | LoadV x
+            | LoadNone 
             deriving (Generic, Generic1, Show, Eq, Functor)
             
 instance Applicative Load where
-   pure = Const
-   (Const f) <*> (Const a) = (Const $ f a)
-   _ <*> _ = ConstNull
+   pure = LoadV
+   (LoadV f) <*> (LoadV a) = (LoadV $ f a)
+   _ <*> _ = LoadNone
    
 data Save x = Save String String x
+            | SaveR x
             | Ignore
             deriving (Generic, Generic1, Show, Eq, Functor)
 
@@ -84,29 +85,29 @@ instance Applicative Save where
    
 data Value x = Value x
              | Values [x]
-             | Null
+             | None
             deriving (Generic, Generic1, Show, Eq, Functor)
 
 instance Applicative Value where
    pure = Value
    (Value f) <*> (Value a) = (Value $ f a)
-   _ <*> _ = Null
+   _ <*> _ = None
             
 throughMaybe :: (a -> b) -> Value a -> Value b
 throughMaybe f = maybe2value . fmap f . value2maybe 
    
 value2maybe :: Value a -> Maybe a
 value2maybe (Value x) = Just x
-value2maybe Null = Nothing
+value2maybe None = Nothing
 
 maybe2value :: Maybe a -> Value a
-maybe2value Nothing = Null
+maybe2value Nothing = None
 maybe2value (Just x) = Value x
    
-data LastID x = ID Integer
-              | Ignored
-            deriving (Generic, Generic1, Show, Eq, Functor)
-instance Applicative LastID
+data ID x = ID Integer
+          | Ignored
+         deriving (Generic, Generic1, Show, Eq, Functor)
+instance Applicative ID
 -- data Delete x = Delete String String String 
 
 class (Field b, Field r) => DB b r | b -> r, r -> b where
@@ -171,7 +172,7 @@ unsafeFromJSON a =
    where r = fromJSON a
 
 
-instance DB Save LastID where
+instance DB Save ID where
    optimize = map combine . groupBy shouldCombine where 
       shouldCombine :: (String, Save v) -> (String, Save v) -> Bool
       shouldCombine (_, Save t1 _ _) (_, Save t2 _ _) = t1 == t2
@@ -202,12 +203,12 @@ instance DB Load Value where
    sendSql _ = False
    sendSqlR (LoadR _) = True
    sendSqlR _ = False
-   wrapCnst (Const a) = Value a
-   wrapCnst ConstNull = Null
+   wrapCnst (LoadV a) = Value a
+   wrapCnst LoadNone = None
    wrapVal = Value 
    wrapVals = Values
    fromSqlVal (Value x) = [("tag", toJSON "Value"), ("contents", sql2aeson x)]
-   fromSqlVal Null = [("tag", toJSON "Null"), ("contents", toJSON ([] :: [()]))]
+   fromSqlVal None = [("tag", toJSON "None"), ("contents", toJSON ([] :: [()]))]
    exec (Load table column whereClause) = do
       cnn <- ask
       v <- lift $ withTransaction cnn (\cnn -> quickQuery cnn stmt [])
@@ -244,8 +245,8 @@ instance (Model m, Generic (m a), GShow' (Rep (m a))) => Show (m a) where
    test :: Test Load
    test = Test {
       a = Load "Table" "Column" "id > 5",
-      b = Const 3,
-      c = ConstNull
+      b = LoadV 3,
+      c = LoadNone
    }
    
    load test :: [Test Value]

@@ -24,24 +24,19 @@ data Test m = Test {
 } deriving (Generic)
 instance Model Test 
 
-
-testSub :: Test Load
-testSub = Test {
-   a = Load "Test" "id" "id <= 100000",
-   b = Load "Test" "f1" "id <= 100000",
-   c = Const 1,
-   d = ConstNull,
-   e = ConstNull
-}
-   
-
 testLoadObj :: Test Load
 testLoadObj = Test {
    a = Load "Test" "id" "id <= 100000",
    b = Load "Test" "f1" "id <= 100000",
-   c = Const 1,
-   d = ConstNull,
-   e = LoadR testSub
+   c = LoadV 1,
+   d = LoadNone,
+   e = LoadR $ Test {
+      a = Load "Test" "id" "id <= 100000",
+      b = Load "Test" "f1" "id <= 100000",
+      c = LoadV 1,
+      d = LoadNone,
+      e = LoadNone
+   }
 }
    
 testSaveObj :: Test Save
@@ -50,7 +45,13 @@ testSaveObj = Test {
    b = Save "Test" "f1" "testSaveObj",
    c = Ignore,
    d = Ignore,
-   e = Ignore
+   e = SaveR $ Test {
+      a = Save "Test" "f2" 1,
+      b = Save "Test" "f1" "testSaveObj",
+      c = Ignore,
+      d = Ignore,
+      e = Ignore
+   }
 }
 
 test :: IO ()

@@ -31,9 +31,9 @@ testSub :: Test Load
 testSub = Test {
    a = Load "Test" "id" "id < 6",
    b = Load "Test" "f1" "id < 6",
-   c = Const 1,
-   d = ConstNull,
-   e = ConstNull
+   c = LoadV 1,
+   d = LoadNone,
+   e = LoadNone
 }
    
 
@@ -41,8 +41,8 @@ testLoadObj :: Test Load
 testLoadObj = Test {
    a = Load "Test" "id" "id < 6",
    b = Load "Test" "f1" "id < 6",
-   c = Const 1,
-   d = ConstNull,
+   c = LoadV 1,
+   d = LoadNone,
    e = LoadR testSub
 }
    

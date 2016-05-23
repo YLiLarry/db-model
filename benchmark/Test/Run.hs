@@ -27,8 +27,8 @@ instance Model Test
 
 testSub :: Test Load
 testSub = Test {
-   a = Load "Test" "id" "id = 1000",
-   b = Load "Test" "f1" "id = 1000",
+   a = Load "Test" "id" "id <= 100000",
+   b = Load "Test" "f1" "id <= 100000",
    c = Const 1,
    d = ConstNull,
    e = ConstNull
@@ -37,8 +37,8 @@ testSub = Test {
 
 testLoadObj :: Test Load
 testLoadObj = Test {
-   a = Load "Test" "id" "id < 1000",
-   b = Load "Test" "f1" "id < 1000",
+   a = Load "Test" "id" "id <= 100000",
+   b = Load "Test" "f1" "id <= 100000",
    c = Const 1,
    d = ConstNull,
    e = LoadR testSub
@@ -57,6 +57,9 @@ test :: IO ()
 test = do 
    conn <- connectSqlite3 "benchmark/benchmark.db"
    hspec $ do
+      -- describe "Perpare" $ do
+         -- it "Populate DB..." $ do
+            -- void $ replicateM 100000 (runReaderT (run testSaveObj) conn)
       describe "Benchmark" $ do
          it "Load" $ do
             print =<< length <$> (runReaderT (run testLoadObj) conn)

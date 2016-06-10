@@ -16,6 +16,9 @@ import Database.HDBC hiding (run)
 import Database.HDBC.Sqlite3
 import Control.Monad.Reader
 import Data.Typeable
+import           Text.Printf (printf)
+import qualified Text.Printf as P
+
 
 data Test m = Test {
    a :: m Int,
@@ -64,6 +67,21 @@ testSaveObj = Test {
       e = SaveN
    }
 }
+
+-- testRemoveObj :: Test Remove
+-- testRemoveObj = Test {
+--    a = Save "Test" "f2" 1,
+--    b = Save "Test" "f1" "testSaveObj",
+--    c = SaveN,
+--    d = SaveN,
+--    e = SaveR $ Test {
+--       a = Save "Test" "f2" 1,
+--       b = Save "Test" "f1" "testSaveObjRecursive",
+--       c = SaveN,
+--       d = SaveN,
+--       e = SaveN
+--    }
+-- }
 
 test :: IO ()
 test = do 

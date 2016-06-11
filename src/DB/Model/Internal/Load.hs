@@ -26,6 +26,7 @@ import Data.List.Split as L
 import           Data.Map (Map)
 import qualified Data.Map as M
 import DB.Model.Internal.Class
+import DB.Model.Internal.Prelude
 import DB.Model.Internal.Value
 import DB.Model.Internal.Exception
 import DB.Model.Internal.TypeCast
@@ -43,22 +44,43 @@ import qualified Data.Proxy as P
 
 data Load = Load String deriving (Show)
 
-instance Query Load where
-   group rel w _ = [(fields, Load $ printf "SELECT %s FROM %s %s WHERE %s" columns mainTable fulljoins w)]
-      where 
-         (mainTable, mainKey) = head keys
-         fields = map fst $ filter (isColOrKey . snd) rel
-         cols = map (unRel . snd) rel
-         unRel (IsKey ls) = head $ ls
-         unRel (IsCol t c) = (t,c)
-         (IsKey keys) = fromJust $ L.find isKey $ map snd rel
-         columns = L.intercalate "," [printf "%s.%s" t c | (t,c) <- cols]
-         fulljoins = unwords [printf "LEFT OUTER JOIN %s ON %s.%s=%s.%s" t t c mainTable mainKey | (t,c) <- tail keys]
+recursiveLoad :: (IConnection con) => [(String, Relation A.Value)] -> Where -> Model con [[(String, Value A.Value)]]
+recursiveLoad r w = do
+   let nulls  = map (const Null `second`) $ filter (isNull . snd) r
+   let consts  = map (getConst `second`) $ filter (isConst . snd) r
+   let hasMany = filter (isHasMany . snd) r
+   let others  = filter (isColOrKey . snd) r
+   result <- retrieve (group others w)
+   let ids = [ findKeyVal r o | o <- result ]
+   recurs <- sequence [ sequence [ sequence (field, Many <$> map kvp2json <$> (handleSubObj field (unsafeTo id) r)) | (field, r) <- hasMany] | id <- ids ]
+   return $ zipWith (++) recurs [ nulls ++ map (wrapValue `second`) (consts ++ object) | object <- result ]
+   where
+      wrapValue :: A.Value -> Value A.Value
+      wrapValue A.Null = Null
+      wrapValue x = Val x
+      
+      retrieve :: (IConnection con) => [([String], Load)] -> Model con [[(String, A.Value)]]
+      retrieve a = regroup <$> mapM (sndM execQuery) a
+               
+      handleSubObj :: (IConnection con) => String -> Integer -> Relation A.Value -> Model con [[(String, Value A.Value)]]
+      handleSubObj field id (HasMany idCol r) = recursiveLoad (json2kvp r) (printf "%s = %d" idCol id)
+    
+      group :: [(String, Relation A.Value)] -> Where -> [([String], Load)]
+      group rel w = [(fields, Load $ printf "SELECT %s FROM %s %s WHERE %s" columns mainTable fulljoins w)]
+         where 
+            (mainTable, mainKey) = head keys
+            fields = map fst $ filter (isColOrKey . snd) rel
+            cols = map (unRel . snd) rel
+            unRel (IsKey ls) = head $ ls
+            unRel (IsCol t c) = (t,c)
+            (IsKey keys) = fromJust $ L.find isKey $ map snd rel
+            columns = L.intercalate "," [printf "%s.%s" t c | (t,c) <- cols]
+            fulljoins = unwords [printf "LEFT OUTER JOIN %s ON %s.%s=%s.%s" t t c mainTable mainKey | (t,c) <- tail keys]
 
-   execQuery (Load q) = do
-      cnn <- ask
-      liftIO $ (map.map) sql2aeson <$> withTransaction cnn (\cnn -> quickQuery cnn q [])
-        
+      execQuery :: (IConnection con) => Load -> Model con [[A.Value]] 
+      execQuery (Load q) = do
+         cnn <- ask
+         liftIO $ (map.map) sql2aeson <$> withTransaction cnn (\cnn -> quickQuery cnn q [])
         
 -- data Load x = LoadW String String Where
 --             | LoadV x

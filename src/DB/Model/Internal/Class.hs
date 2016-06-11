@@ -47,16 +47,17 @@ deriving instance (Monad m) => Monad (ModelT r m)
 deriving instance (Monad m) => MonadError String (ModelT r m)
 deriving instance (Monad m) => MonadReader r (ModelT r m)
 deriving instance (MonadIO m) => MonadIO (ModelT cnn m)
+deriving instance (MonadState s m) => MonadState s (ModelT r m)
 type Model r = ModelT r IO
 
 runModelT :: ModelT r m a -> r -> m (Either String a)
 runModelT a con = runExceptT $ runReaderT (unModelT a) con
 
--- data Query = Query String [A.Value]
+type Query = String
 type Where = String
 type Table = String
 type Column = String
-
+type JSONVal = A.Value
 
 data Relation t = IsCol Table Column -- ^ Table name, column name, key column name in the table used for this object
                 | IsKey [(Table, Column)] -- ^ Table name, column name. Current field is a key. 
@@ -70,33 +71,33 @@ instance (ToJSON x) => ToJSON (Relation x)
 instance (GShow x) => GShow (Relation x)
 deriving instance (Show x) => Show (Relation x)
 
-class (Show a) => Query a where
-   -- ^ This function should only consider IsCol, IsKey and Val. Other cases should be filtered before this function is called.
-   group :: [(String, Relation A.Value)] -> Where -> [(String, A.Value)] -> [([String], a)]
+-- class (Show a) => Query a where
+--    -- ^ This function should only consider IsCol, IsKey and Val. Other cases should be filtered before this function is called.
+--    group :: [(String, Relation A.Value)] -> Where -> [(String, A.Value)] -> [([String], a)]
    
-   execQuery :: (IConnection con) => a -> Model con [[A.Value]] 
+--    execQuery :: (IConnection con) => a -> StateT (Maybe Integer) (Model con) [[A.Value]] 
       
-   recursive :: (IConnection con) => Proxy a -> [(String, Relation A.Value)] -> Where -> [(String, A.Value)] -> Model con [[(String, Value A.Value)]]
-   recursive _ r w v = do
-      let nulls  = map (const Null `second`) $ filter (isNull . snd) r
-      let consts  = map (getConst `second`) $ filter (isConst . snd) r
-      let hasMany = filter (isHasMany . snd) r
-      let others  = filter (isColOrKey . snd) r
-      result <- retrieve (group others w v)
-      let ids = [ findKeyVal r o | o <- result ]
-      recurs <- sequence [ sequence [ sequence (field, Many <$> map kvp2json <$> (handleSubObj field (unsafeTo id) r v)) | (field, r) <- hasMany] | id <- ids ]
-      return $ zipWith (++) recurs [ nulls ++ map (wrapValue `second`) (consts ++ object) | object <- result ]
-      where
-         wrapValue :: A.Value -> Value A.Value
-         wrapValue A.Null = Null
-         wrapValue x = Val x
+--    recursive :: (IConnection con) => Proxy a -> [(String, Relation A.Value)] -> Where -> [(String, A.Value)] -> Model con [[(String, Value A.Value)]]
+--    recursive _ r w v = do
+--       let nulls  = map (const Null `second`) $ filter (isNull . snd) r
+--       let consts  = map (getConst `second`) $ filter (isConst . snd) r
+--       let hasMany = filter (isHasMany . snd) r
+--       let others  = filter (isColOrKey . snd) r
+--       result <- retrieve (group others w v)
+--       let ids = [ findKeyVal r o | o <- result ]
+--       recurs <- sequence [ sequence [ sequence (field, Many <$> map kvp2json <$> (handleSubObj field id r v)) | (field, r) <- hasMany] | id <- ids ]
+--       return $ zipWith (++) recurs [ nulls ++ map (wrapValue `second`) (consts ++ object) | object <- result ]
+--       where
+--          wrapValue :: A.Value -> Value A.Value
+--          wrapValue A.Null = Null
+--          wrapValue x = Val x
          
-         retrieve :: (IConnection con) => [([String], a)] -> Model con [[(String, A.Value)]]
-         retrieve a = regroup <$> mapM (sndM execQuery) a   
+--          retrieve :: (IConnection con) => [([String], a)] -> Model con [[(String, A.Value)]]
+--          retrieve a = regroup <$> (evalStateT (mapM (sndM execQuery) a) Nothing)
                   
-         handleSubObj :: (IConnection con) => String -> Integer -> Relation A.Value -> [(String, A.Value)] -> Model con [[(String, Value A.Value)]]
-         handleSubObj field id (HasMany idCol r) v = recursive (Proxy :: Proxy a) (json2kvp r) (printf "%s = %d" idCol id) val
-            where val = if null v then [] else json2kvp $ fromJust $ L.lookup field v
+--          handleSubObj :: (IConnection con) => String -> Integer -> Relation A.Value -> [(String, A.Value)] -> Model con [[(String, Value A.Value)]]
+--          handleSubObj field id (HasMany idCol r) v = recursive (Proxy :: Proxy a) (json2kvp r) (printf "%s = %d" idCol id) val
+--             where val = if null v then [] else json2kvp $ fromJust $ L.lookup field v
 
 
 regroup :: [([String], [[A.Value]])] -> [[(String, A.Value)]]
@@ -133,11 +134,13 @@ findIsKey = fromJust . L.find (isKey . snd)
 isKeyField :: [(String, Relation A.Value)] -> String
 isKeyField = fst . findIsKey
 
-findKeyVal :: [(String, Relation A.Value)] -> [(String, A.Value)] -> A.Value
-findKeyVal r o = fromJust $ L.lookup (isKeyField r) o 
+findKeyVal :: [(String, Relation A.Value)] -> [(String, A.Value)] -> Integer
+findKeyVal r o = x
+   where (Val x) = unsafeTo $ fromJust $ L.lookup (isKeyField r) o 
 
-findForField :: String -> [(String, Relation A.Value)] -> Relation A.Value
-findForField field rel = fromJust $ L.lookup field rel
+relForField :: String -> [(String, Relation A.Value)] -> Relation A.Value
+relForField field rel = fromJust $ L.lookup field rel
+
 
 -- instance ToJSON SqlValue where
 --    toJSON = sql2aeson

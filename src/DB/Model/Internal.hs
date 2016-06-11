@@ -8,8 +8,8 @@ module DB.Model.Internal (module X, TableBase) where
 import DB.Model.Internal.Prelude
 import DB.Model.Internal.Class as X
 import DB.Model.Internal.Load as X
--- import DB.Model.Internal.New as X
--- import DB.Model.Internal.Remove as X
+import DB.Model.Internal.New as X
+import DB.Model.Internal.Remove as X
 import DB.Model.Internal.Update as X
 import DB.Model.Internal.Value as X
 

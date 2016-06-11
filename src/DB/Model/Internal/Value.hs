@@ -47,6 +47,11 @@ instance (ToJSON x) => ToJSON (Value x)
 instance (FromJSON x) => FromJSON (Value x)
 instance (GShow x) => GShow (Value x)
 
+get :: (a Value -> Value b) -> a Value -> b
+get f a = let Val x = f a in x
+
+(#) = flip get
+
 -- instance Applicative Value where
 --    pure = Val
 --    (Val f) <*> (Val a) = (Val $ f a)
@@ -59,4 +64,3 @@ instance (GShow x) => GShow (Value x)
 --    wrapVals = Many
    
 -- instance Field Value
-

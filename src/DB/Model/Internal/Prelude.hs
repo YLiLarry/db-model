@@ -1,10 +1,11 @@
 module DB.Model.Internal.Prelude 
-   (module X, sndM, kvp2json, json2kvp, obj2kvp, unsafeTo) where
+   (module X, sndM, kvp2json, json2kvp, obj2kvp, unsafeTo, groupSortOn) where
    
 import Text.Printf as X (printf)
 import Control.Monad as X
 import Control.Monad.Trans as X
 import Control.Monad.Except as X
+import Control.Monad.State as X
 import Control.Monad.Reader as X
 import Generics.Deriving.Show as X
 import Data.Typeable as X (Typeable, typeOf)
@@ -17,6 +18,7 @@ import Data.Maybe as X
 import Data.Either as X
 import Debug.Trace as X
 
+import Data.List.Extra (groupSortOn)
 import Data.Aeson as A
 import           Data.HashMap.Strict (HashMap)
 import qualified Data.HashMap.Strict as H
@@ -39,3 +41,5 @@ unsafeTo a =
 
 obj2kvp :: (ToJSON a, Show a, FromJSON b, Typeable b) => a -> [(String, b)]
 obj2kvp = json2kvp . toJSON
+
+

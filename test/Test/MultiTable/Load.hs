@@ -10,21 +10,21 @@ import DB.Model.MultiTable
 import Database.HDBC
 import Database.HDBC.Sqlite3
 
-data Case1 m = Case1 {
-   id_1 :: m Int,
-   f1_1 :: m String,
-   f2_1 :: m Int,
-   c_1  :: m String,
-   n_1  :: m String
+data BASIC m = BASIC {
+   key :: m Int,
+   f1 :: m Integer,
+   f2 :: m String,
+   c1  :: m String,
+   n1  :: m String
 } deriving (Generic)
 
-instance MultiTable Case1 where
-   relation = Case1 {
-      id_1 = IsKey [("Test", "id")],
-      f1_1 = IsCol "Test" "f1",
-      f2_1 = IsCol "Test" "f2",
-      c_1  = IsConst "const",
-      n_1  = IsNull
+instance MultiTable BASIC where
+   relation = BASIC {
+      key = IsKey [("Test", "id")],
+      f1 = IsCol "Test" "f1",
+      f2 = IsCol "Test" "f2",
+      c1  = IsConst "const",
+      n1  = IsNull
    }
 
 test :: IO ()
@@ -33,7 +33,7 @@ test = do
    hspec $ do
       describe "BASIC LOAD" $ do
          it "Case 1: load from single table, no recursion." $ do
-            r <- runModelT (load "Test.id <=5 ") conn :: IO (Either String [Case1 Value])   
-            (map id_1 <$> r) `shouldBe` (Right [Val 1,Val 2,Val 3,Val 4,Val 5])
+            (Right r) <- runModelT (load "id > 0") conn :: IO (Either String [BASIC Value])   
+            length r `shouldSatisfy` (>= 100)
          -- it "Test Save" $ testSave conn
    disconnect conn

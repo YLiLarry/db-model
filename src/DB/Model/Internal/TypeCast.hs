@@ -19,7 +19,7 @@ sql2aeson v                 = error $ "TypeCast.hs: " ++ show v
 
 
 aeson2sql :: Value -> SqlValue
-aeson2sql (String v) = toSql v
+aeson2sql (String v) = toSql $ B.pack $ T.unpack v
 aeson2sql (Number v) =  
   case floatingOrInteger v of
       Left float -> toSql $ (float :: Double)

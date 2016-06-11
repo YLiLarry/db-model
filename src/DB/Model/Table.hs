@@ -54,39 +54,29 @@ class (Typeable a,
        ToJSON (a Relation),
        Show (a Relation)) => Table (a :: (* -> *) -> *) where
    
-   -- ^ a map from fields to column names
-   locate :: a Relation
    
-   -- ^ set the table name
-   -- ^ default = Tagged (name of the data type)
-   tableName :: Tagged a String
-   tableName = Tagged $ show $ typeOf (Proxy :: Proxy (a Value))
+   -- ^ a map from fields to table and column names
+   relation :: a Relation
    
-   locate' :: Proxy a -> HashMap String (Relation A.Value)
-   locate' = const $ unsafeTo (locate :: a Relation)
+   load :: (IConnection con) => Where -> Model con [a Value]
+   load = loadR (relation :: a Relation)
    
-   keyColumnName :: (MonadError String m) => Proxy a -> m String
-   keyColumnName = const $ do
-      case find isKey $ M.toList (locate' (Proxy :: Proxy a)) of
-         Nothing -> fail $ printf "Cannot find an IsKey field in %s" (show (locate :: a Relation))
-         Just (field, IsKey result) -> return result
-      where 
-         isKey :: (String, Relation A.Value) -> Bool
-         isKey (_, IsKey _) = True
-         isKey _ = False
+   loadR :: (IConnection con) => a Relation -> Where -> Model con [a Value]
+   loadR r w = map (unsafeTo . kvp2json) <$> (I.recursiveLoad (obj2kvp r) w)
    
-   -- ^ a function that gives the value of the primary key
-   getKey :: a x -> Integer
+   new :: (IConnection con) => a Value -> Model con (a Value)
+   new = newR (relation :: a Relation)
    
-   -- ^ load the row by the primary key
-   loadKeyEQ :: (IConnection con) => Integer -> a LoadT -> Model con (a Value)
-   loadKeyEQ keyVal conf = do
-      key <- keyColumnName (Proxy :: Proxy a)
-      result <- load $ LoadQ conf $ printf "'%s' = %d" key key
-      case result of 
-         [] -> throwError $ printf "Cannot find '%s' = %d in '%s'" key keyVal table
-         ls -> return $ head ls
-      where 
-            table = untag (tableName :: Tagged a String)
-
-instance (Table a) => MultiTable a
+   newR :: (IConnection con) => a Relation -> a Value -> Model con (a Value)
+   newR r v = (unsafeTo . kvp2json) <$> head <$> (I.recursiveNew (obj2kvp r) Nothing (obj2kvp v))
+   
+   update :: (IConnection con) => a Value -> Model con ()
+   update = updateR (relation :: a Relation)
+   
+   updateR :: (IConnection con) => a Relation -> a Value -> Model con ()
+   updateR r v = void $ (I.recursiveUpdate (obj2kvp r) (obj2kvp v))
+   
+   remove :: (IConnection con) => a Value -> Model con ()
+   remove = removeR (relation :: a Relation)
+   
+   removeR :: (IConnection con) => a Relation -> a Value -> Model con ()

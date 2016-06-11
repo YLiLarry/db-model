@@ -22,12 +22,22 @@ import qualified Database.HDBC as H
 import           Data.Aeson (fromJSON, toJSON, FromJSON, ToJSON, GToJSON, GFromJSON)
 import qualified Data.Aeson as A
 
-data Remove = Remove Table Where
 
-remove :: (IConnection con) => Remove -> Model con ()
-remove (Remove table whereClause) = do
-   cnn <- ask
-   void $ liftIO $ withTransaction cnn (\cnn -> quickQuery cnn stmt [])
+nonRecursiveRemove :: (IConnection con) => [(String, Relation A.Value)] -> [(String, A.Value)] -> Model con ()
+nonRecursiveRemove rel val = do
+   deleteFromTable False keyVal $ head keys
+   mapM_ (deleteFromTable False keyVal) $ tail keys
    where 
-      stmt = printf "DELETE FROM `%s` WHERE %s" table whereClause
+      (kField, IsKey keys) = findIsKey rel
+      keyVal = findKeyVal rel val
    
+deleteFromTable :: (IConnection con) => Bool -> Integer -> (Table, Column) -> Model con ()
+deleteFromTable mustExist keyVal (table, keyCol) = do
+   cnn <- ask
+   modified <- liftIO $ withTransaction cnn 
+      (\cnn -> run cnn stmt [toSql keyVal])
+   when (mustExist && modified == 0) $ throwError 
+      $ printf "Could not find a row to delete when executing 'DELETE FROM %s WHERE %s=%d'."
+         table keyCol keyVal
+   where
+      stmt = printf "DELETE FROM %s WHERE %s=?" table keyCol

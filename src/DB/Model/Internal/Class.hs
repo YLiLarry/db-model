@@ -57,7 +57,7 @@ type Query = String
 type Where = String
 type Table = String
 type Column = String
-type JSONVal = A.Value
+type JSONValue = A.Value
 
 data Relation t = IsCol Table Column -- ^ Table name, column name, key column name in the table used for this object
                 | IsKey [(Table, Column)] -- ^ Table name, column name. Current field is a key. 

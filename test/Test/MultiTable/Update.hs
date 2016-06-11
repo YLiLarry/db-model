@@ -14,13 +14,13 @@ test = do
    hspec $ do
       describe "BASIC UPDATE" $ do
          it "Case 1: update one field in a table, no recursion." $ do
-            (Right [[largestKey :: Integer]]) <- runModelT (rawQuery "SELECT MAX(id) FROM Test" []) conn
+            (Right [[largestKey]]) <- runModelT (rawQuery "SELECT MAX(id) FROM Test" []) conn
             -- check
-            (Right [r]) <- runModelT (load $ printf "Test.id = %d" largestKey) conn
+            (Right [r]) <- runModelT (load $ printf "Test.id = %d" (cast largestKey :: Integer)) conn
             -- set 
             let x = r {f2 = Val "f_changed"}
             runModelT (update x) conn
-            (Right [a]) <- runModelT (load $ printf "Test.id = %d" largestKey) conn
+            (Right [a]) <- runModelT (load $ printf "Test.id = %d" (cast largestKey :: Integer)) conn
             f2 a `shouldBe` (Val "f_changed")
             -- reset
             void $ runModelT (update r) conn

@@ -93,7 +93,10 @@ rawQuery :: (IConnection con,
 rawQuery q vs = do
    con <- ask
    r <- liftIO $ withTransaction con (\cnn -> quickQuery cnn q vs)
-   return $ (map . map) cast r
+   return $ (map . map) (cast . sql2aeson) r
 
-cast :: (Typeable a, FromJSON a) => SqlValue -> a
-cast = unsafeTo . sql2aeson
+-- | Example:
+-- [[a,b,c]] <- rawQuery ...
+-- printf "%d" $ (cast a :: Integer)
+cast :: (Typeable a, FromJSON a) => JSONValue -> a
+cast = unsafeTo

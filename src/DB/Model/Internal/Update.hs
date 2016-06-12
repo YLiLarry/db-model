@@ -5,14 +5,10 @@ import DB.Model.Internal.Class
 import DB.Model.Internal.TypeCast
 import DB.Model.Internal.Value
 
-import           Data.Aeson ()
 import qualified Data.Aeson as A
-import           Data.List ()
 import qualified Data.List as L
 
-
 data Update = Update String [A.Value] deriving (Show)
-
 
 recursiveUpdate :: (IConnection con) => [(String, Relation A.Value)] -> [(String, A.Value)] -> Model con [[(String, Value A.Value)]]
 recursiveUpdate r v = do

@@ -12,33 +12,11 @@
 
 module DB.Model.Internal.Class where
 
-import GHC.Generics hiding (to, from)
-import Control.Monad
-import Control.Monad.Except
-import Control.Monad.Reader
-import Database.HDBC as D hiding (run)
-import Text.Printf
-import           Data.Aeson (fromJSON, toJSON, FromJSON, ToJSON, GToJSON, GFromJSON)
-import qualified Data.Aeson as A
-import Control.Arrow
-import qualified Data.List as L
-import Data.List.Split as L
-import           Data.Map (Map)
-import qualified Data.Map as M
 import DB.Model.Internal.Prelude
 import DB.Model.Internal.Value
-import DB.Model.Internal.Exception
-import DB.Model.Internal.TypeCast
-import qualified Data.Vector as V
-import Data.Maybe
-import Control.Exception
-import GHC.IO.Exception
-import Generics.Deriving.Show
-import Data.Typeable
-import           Data.HashMap.Strict (HashMap)
-import qualified Data.HashMap.Strict as H
-import           Data.Proxy (Proxy(..))
-import qualified Data.Proxy as P
+
+import qualified Data.Aeson as A
+import qualified Data.List as L
 
 newtype ModelT r m a = ModelT { unModelT :: ReaderT r (ExceptT String m) a} 
 deriving instance (Monad m) => Functor (ModelT r m)
@@ -68,7 +46,7 @@ data Relation t = IsCol Table Column -- ^ Table name, column name, key column na
 instance (FromJSON x) => FromJSON (Relation x)
 instance (ToJSON x) => ToJSON (Relation x)
 instance (GShow x) => GShow (Relation x)
-deriving instance (Show x) => Show (Relation x)
+instance (GEq x) => GEq (Relation x)
 
 -- class (Show a) => Query a where
 --    -- ^ This function should only consider IsCol, IsKey and Val. Other cases should be filtered before this function is called.

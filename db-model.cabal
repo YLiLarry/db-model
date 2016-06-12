@@ -15,10 +15,10 @@ cabal-version:       >=1.10
 
 library
   hs-source-dirs:      src
-  exposed-modules:     DB.Model
-                     -- , DB.Model.Table
+  exposed-modules:     DB.Model.SimpleTable
                      , DB.Model.MultiTable
-                     , DB.Model.Internal
+                     , DB.Model.Internal.MultiTable
+                     , DB.Model.Internal.SimpleTable
                      , DB.Model.Internal.Prelude
                      , DB.Model.Internal.Class
                      , DB.Model.Internal.Value
@@ -51,8 +51,11 @@ test-suite db-model-test
   type:                exitcode-stdio-1.0
   hs-source-dirs:      test
   main-is:             Spec.hs
-  other-modules:       Test.MultiTable
+  other-modules:       Test.SimpleTable
+                     , Test.MultiTable
+                     , Test.MultiTable.New
                      , Test.MultiTable.Load
+                     , Test.MultiTable.Remove
                      , Test.MultiTable.Update
   build-depends:       base
                      , db-model

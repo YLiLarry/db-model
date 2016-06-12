@@ -5,9 +5,7 @@ import DB.Model.Internal.Class
 import DB.Model.Internal.TypeCast
 import DB.Model.Internal.Value
 
-import           Data.Aeson ()
 import qualified Data.Aeson as A
-import           Data.List ()
 import qualified Data.List as L
 
 

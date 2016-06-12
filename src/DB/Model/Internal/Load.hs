@@ -12,36 +12,14 @@
 
 module DB.Model.Internal.Load where
 
-import GHC.Generics hiding (to, from)
-import Control.Monad
-import Control.Monad.Except
-import Control.Monad.Reader
-import Database.HDBC as D hiding (run)
-import Text.Printf
-import           Data.Aeson (fromJSON, toJSON, FromJSON, ToJSON, GToJSON, GFromJSON)
-import qualified Data.Aeson as A
-import Control.Arrow
-import Data.List as L
-import Data.List.Split as L
-import           Data.Map (Map)
-import qualified Data.Map as M
 import DB.Model.Internal.Class
 import DB.Model.Internal.Prelude
 import DB.Model.Internal.Value
 import DB.Model.Internal.Where
-import DB.Model.Internal.Exception
 import DB.Model.Internal.TypeCast
-import qualified Data.Vector as V
-import Data.Maybe
-import Control.Exception
-import GHC.IO.Exception
-import Generics.Deriving.Show
-import Data.Typeable
-import           Data.HashMap.Strict (HashMap)
-import qualified Data.HashMap.Strict as H
-import           Data.Proxy (Proxy(..))
-import qualified Data.Proxy as P
 
+import qualified Data.Aeson as A
+import Data.List as L
 
 data Load = Load String [A.Value] deriving (Show)
 

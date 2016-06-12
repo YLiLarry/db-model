@@ -12,6 +12,7 @@ import DB.Model.Internal.New as X
 import DB.Model.Internal.Remove as X
 import DB.Model.Internal.Update as X
 import DB.Model.Internal.Value as X
+import DB.Model.Internal.Where as X
 
 class (Typeable a) => TableBase (a :: (* -> *) -> *)
 

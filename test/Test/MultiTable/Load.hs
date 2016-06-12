@@ -33,7 +33,7 @@ test = do
    hspec $ do
       describe "BASIC LOAD" $ do
          it "Case 1: load from single table, no recursion." $ do
-            (Right r) <- runModelT (load "id > 0") conn :: IO (Either String [BASIC Value])   
+            (Right r) <- runModelT (load $ key >. 0) conn :: IO (Either String [BASIC Value])   
             length r `shouldSatisfy` (>= 100)
          -- it "Test Save" $ testSave conn
    disconnect conn

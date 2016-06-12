@@ -54,7 +54,6 @@ runModelT :: ModelT r m a -> r -> m (Either String a)
 runModelT a con = runExceptT $ runReaderT (unModelT a) con
 
 type Query = String
-type Where = String
 type Table = String
 type Column = String
 type JSONValue = A.Value

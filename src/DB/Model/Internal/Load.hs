@@ -28,6 +28,7 @@ import qualified Data.Map as M
 import DB.Model.Internal.Class
 import DB.Model.Internal.Prelude
 import DB.Model.Internal.Value
+import DB.Model.Internal.Where
 import DB.Model.Internal.Exception
 import DB.Model.Internal.TypeCast
 import qualified Data.Vector as V
@@ -42,9 +43,9 @@ import           Data.Proxy (Proxy(..))
 import qualified Data.Proxy as P
 
 
-data Load = Load String deriving (Show)
+data Load = Load String [A.Value] deriving (Show)
 
-recursiveLoad :: (IConnection con) => [(String, Relation A.Value)] -> Where -> Model con [[(String, Value A.Value)]]
+recursiveLoad :: (IConnection con) => [(String, Relation A.Value)] -> WhereCompiled -> Model con [[(String, Value A.Value)]]
 recursiveLoad r w = do
    let nulls  = map (const Null `second`) $ filter (isNull . snd) r
    let consts  = map (getConst `second`) $ filter (isConst . snd) r
@@ -63,10 +64,10 @@ recursiveLoad r w = do
       retrieve a = regroup <$> mapM (sndM execQuery) a
                
       handleSubObj :: (IConnection con) => String -> Integer -> Relation A.Value -> Model con [[(String, Value A.Value)]]
-      handleSubObj field id (HasMany idCol r) = recursiveLoad (json2kvp r) (printf "%s = %d" idCol id)
+      handleSubObj field id (HasMany idCol r) = recursiveLoad (json2kvp r) (WhereCompiled (printf "%s = %d" idCol id) [])
     
-      group :: [(String, Relation A.Value)] -> Where -> [([String], Load)]
-      group rel w = [(fields, Load $ printf "SELECT %s FROM %s %s WHERE %s" columns mainTable fulljoins w)]
+      group :: [(String, Relation A.Value)] -> WhereCompiled -> [([String], Load)]
+      group rel (WhereCompiled w vs) = [(fields, Load (printf "SELECT %s FROM %s %s WHERE %s" columns mainTable fulljoins w) vs)]
          where 
             (mainTable, mainKey) = head keys
             fields = map fst $ filter (isColOrKey . snd) rel
@@ -78,9 +79,9 @@ recursiveLoad r w = do
             fulljoins = unwords [printf "LEFT OUTER JOIN %s ON %s.%s=%s.%s" t t c mainTable mainKey | (t,c) <- tail keys]
 
       execQuery :: (IConnection con) => Load -> Model con [[A.Value]] 
-      execQuery (Load q) = do
+      execQuery (Load q vs) = do
          cnn <- ask
-         liftIO $ (map.map) sql2aeson <$> withTransaction cnn (\cnn -> quickQuery cnn q [])
+         liftIO $ (map.map) sql2aeson <$> withTransaction cnn (\cnn -> quickQuery cnn q (map aeson2sql vs))
         
 -- data Load x = LoadW String String Where
 --             | LoadV x

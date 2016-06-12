@@ -18,12 +18,14 @@ module DB.Model.MultiTable
     runModelT,
     rawQuery,
     cast,
-    (#)) 
+    (#),
+    module X) 
    where
 
 import DB.Model.Internal.Prelude
 import DB.Model.Internal.TypeCast
 import DB.Model.Internal as I
+import DB.Model.Internal.Where as X
 import           Data.HashMap.Strict (HashMap)
 import qualified Data.HashMap.Strict as M
 import           Data.Aeson ()
@@ -52,7 +54,7 @@ class (Typeable a,
    -- ^ a map from fields to table and column names
    relation :: a Relation
    
-   load :: (IConnection con) => Where -> Model con [a Value]
+   load :: (IConnection con) => Where a -> Model con [a Value]
    load = loadR (relation :: a Relation)
    
    new :: (IConnection con) => a Value -> Model con (a Value)
@@ -74,8 +76,9 @@ class (Typeable a,
        Show (a Relation),
        Show (a Value)) => MultiTableR (a :: (* -> *) -> *) where
    
-   loadR :: (IConnection con) => a Relation -> Where -> Model con [a Value]
-   loadR r w = map (unsafeTo . kvp2json) <$> (I.recursiveLoad (obj2kvp r) w)
+   loadR :: (IConnection con) => a Relation -> Where a -> Model con [a Value]
+   loadR r w = map (unsafeTo . kvp2json) <$> (I.recursiveLoad (obj2kvp r) wc)
+      where wc = runReader w r
    
    updateR :: (IConnection con) => a Relation -> a Value -> Model con ()
    updateR r v = void $ (I.recursiveUpdate (obj2kvp r) (obj2kvp v))

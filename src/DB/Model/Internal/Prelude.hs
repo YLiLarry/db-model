@@ -9,7 +9,7 @@ import Control.Monad.State as X
 import Control.Monad.Reader as X
 import Generics.Deriving.Show as X
 import Data.Typeable as X (Typeable, typeOf)
-import GHC.Generics as X
+import GHC.Generics as X (Generic(..))
 import Data.Proxy as X
 import Data.Aeson as X (fromJSON, toJSON, FromJSON, ToJSON, GToJSON, GFromJSON)
 import Database.HDBC as X

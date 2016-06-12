@@ -46,7 +46,7 @@ test = do
                      }
                (Right r) <- runModelT (newR relation obj) conn
                -- check
-               (Right (c:_)) <- runModelT (loadR relation $ printf "Test.id=%d" $ r#key) conn
+               (Right (c:_)) <- runModelT (loadR relation $ key =. (r#key)) conn
                return $ and [f1 c == f1 obj, f2 c == f2 obj]
          prop "Case 2: create 2 fields in 2 tables, no recursion." $ do
             rf1 <- 10000 `resize` arbitrary
@@ -68,6 +68,6 @@ test = do
                      }
                (Right r) <- runModelT (newR relation obj) conn
                -- check
-               (Right (c:_)) <- runModelT (loadR relation $ printf "Test.id=%d" $ r#key) conn
+               (Right (c:_)) <- runModelT (loadR relation $ key =. (r#key)) conn
                return $ and [f1 c == f1 obj, f2 c == f2 obj]
    disconnect conn

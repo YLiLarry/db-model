@@ -26,6 +26,7 @@ library
                      , DB.Model.Internal.New
                      , DB.Model.Internal.Update
                      , DB.Model.Internal.Remove
+                     , DB.Model.Internal.Where
                      , DB.Model.Internal.TypeCast
                      , DB.Model.Internal.Exception
   build-depends:       base >= 4.7 && < 5

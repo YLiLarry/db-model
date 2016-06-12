@@ -38,10 +38,10 @@ test = do
                n1  = IsNull
             }
             -- check
-            (Right r) <- runModelT (loadR relation $ printf "id > 0") conn
+            (Right r) <- runModelT (loadR relation $ key >. 0) conn
             deleted <- mapM (\v -> runModelT (removeR relation v) conn) r
             sequence deleted `shouldSatisfy` isRight
-            (Right r) <- runModelT (loadR relation $ printf "id > 0") conn
+            (Right r) <- runModelT (loadR relation $ key >. 0) conn
             length r `shouldBe` 0
             let relation = BASIC {
                key = IsKey [("Test1", "id")],
@@ -51,10 +51,10 @@ test = do
                n1  = IsNull
             }
             -- check
-            (Right r) <- runModelT (loadR relation $ printf "id > 0") conn
+            (Right r) <- runModelT (loadR relation $ key >. 0) conn
             deleted <- mapM (\v -> runModelT (removeR relation v) conn) r
             sequence deleted `shouldSatisfy` isRight
-            (Right r) <- runModelT (loadR relation $ printf "id > 0") conn
+            (Right r) <- runModelT (loadR relation $ key >. 0) conn
             length r `shouldBe` 0
          it "Case 2: remove across 2 tables, no recursion." $ do
             New.test
@@ -66,9 +66,9 @@ test = do
                n1  = IsNull
             }
             -- check
-            (Right r) <- runModelT (loadR relation $ printf "Test.id > 0") conn
+            (Right r) <- runModelT (loadR relation $ key >. 0) conn
             deleted <- mapM (\v -> runModelT (removeR relation v) conn) r
             sequence deleted `shouldSatisfy` isRight
-            (Right r) <- runModelT (loadR relation $ printf "Test.id > 0") conn
+            (Right r) <- runModelT (loadR relation $ key >. 0) conn
             length r `shouldBe` 0
    disconnect conn

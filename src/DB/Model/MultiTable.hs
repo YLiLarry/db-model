@@ -9,8 +9,8 @@ module DB.Model.MultiTable
        (?<),
        (#),
        cast,
-       Model,
-       ModelT,
+       Model(..),
+       ModelT(..),
        rawQuery,
        runModelT,
        Generic(..)) 

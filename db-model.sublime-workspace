@@ -1,0 +1,2318 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"where",
+				"whereClause"
+			],
+			[
+				"ex",
+				"execNoCache"
+			],
+			[
+				"ip",
+				"import"
+			],
+			[
+				"Sc",
+				"SCache"
+			],
+			[
+				"G",
+				"GLoad"
+			],
+			[
+				"S",
+				"String"
+			],
+			[
+				"wh",
+				"whenError"
+			],
+			[
+				"t",
+				"throwMismatch"
+			],
+			[
+				"insta",
+				"instance"
+			],
+			[
+				"w",
+				"whenError"
+			],
+			[
+				"Gen",
+				"Generics"
+			],
+			[
+				"in",
+				"instance	Instance"
+			],
+			[
+				"Sql",
+				"SqlValue"
+			],
+			[
+				"test",
+				"test2"
+			],
+			[
+				"imp",
+				"import"
+			],
+			[
+				"Ge",
+				"GExtend"
+			],
+			[
+				"clean",
+				"cleanup"
+			],
+			[
+				"ass",
+				"assertThreadIs"
+			],
+			[
+				"remo",
+				"removeFile〔function〕"
+			],
+			[
+				"remv",
+				"removeFile"
+			],
+			[
+				"threa",
+				"threadIs"
+			],
+			[
+				"set",
+				"setName〔function〕"
+			],
+			[
+				"is",
+				"isRunning〔function〕"
+			],
+			[
+				"L",
+				"Loaded"
+			],
+			[
+				"ma",
+				"makeArgs"
+			],
+			[
+				"def",
+				"defaultCfg"
+			],
+			[
+				"Loa",
+				"LoadedCfg"
+			],
+			[
+				"h",
+				"h264"
+			],
+			[
+				"c",
+				"case	Case"
+			],
+			[
+				"l",
+				"load"
+			],
+			[
+				"con",
+				"conf"
+			],
+			[
+				"F",
+				"FilePath"
+			],
+			[
+				"ls",
+				"lofpairs"
+			],
+			[
+				"node",
+				"node-value"
+			],
+			[
+				"no",
+				"node-key"
+			],
+			[
+				"n",
+				"node-value"
+			],
+			[
+				"te",
+				"tree-map"
+			],
+			[
+				"node-",
+				"node-left"
+			],
+			[
+				"im",
+				"import"
+			],
+			[
+				"par",
+				"parseTime"
+			],
+			[
+				"hG",
+				"hGetLineR"
+			],
+			[
+				"when",
+				"whenM"
+			],
+			[
+				"pre",
+				"predM"
+			],
+			[
+				"gre",
+				"grepOutTime"
+			],
+			[
+				"err",
+				"errHandle"
+			],
+			[
+				"oen",
+				"openFile"
+			],
+			[
+				"No",
+				"Nothing"
+			],
+			[
+				"progre",
+				"progressFile"
+			],
+			[
+				"pro",
+				"progressFile"
+			],
+			[
+				"de",
+				"threadDelay"
+			],
+			[
+				"mac",
+				"matchOutTime"
+			],
+			[
+				"prog",
+				"progressHandle"
+			],
+			[
+				"mat",
+				"matchRegexAll"
+			],
+			[
+				"weh",
+				"when"
+			],
+			[
+				"progr",
+				"progressHandle"
+			],
+			[
+				"get",
+				"getFFmpegExitCode"
+			],
+			[
+				"fm",
+				"ffmpegIsRunning"
+			],
+			[
+				"un",
+				"undefined"
+			],
+			[
+				"FFmp",
+				"FFmpegProcess"
+			],
+			[
+				"out",
+				"outHandle"
+			],
+			[
+				"M",
+				"Maybe"
+			],
+			[
+				"N",
+				"Nothing"
+			],
+			[
+				"maybe",
+				"Maybe"
+			],
+			[
+				"uni",
+				"untilM"
+			],
+			[
+				"pr",
+				"print"
+			],
+			[
+				"proc",
+				"proch"
+			],
+			[
+				"print",
+				"printFFmpeg"
+			],
+			[
+				"ffmp",
+				"FFmpeg"
+			],
+			[
+				"may",
+				"maybeExitCode"
+			],
+			[
+				"ff",
+				"ffmpegIsRunning"
+			],
+			[
+				"prin",
+				"printProgressUntilEnds"
+			],
+			[
+				"ins",
+				"inStr"
+			],
+			[
+				"std",
+				"stdin"
+			],
+			[
+				"Exi",
+				"exitFailure"
+			],
+			[
+				"Cmd",
+				"CmdArgs"
+			],
+			[
+				"ffm",
+				"ffmpeg"
+			],
+			[
+				"wpo",
+				"wposls"
+			],
+			[
+				"wp",
+				"wpos"
+			],
+			[
+				"pci",
+				"picked-word"
+			],
+			[
+				"sta",
+				"state-positions"
+			],
+			[
+				"make",
+				"make-state"
+			],
+			[
+				"wr",
+				"words"
+			],
+			[
+				"stat",
+				"state-positions"
+			],
+			[
+				"tim",
+				"timeOut〔variable〕"
+			],
+			[
+				"p",
+				"proc"
+			],
+			[
+				"T",
+				"TimeOut"
+			],
+			[
+				"Q",
+				"QtCore"
+			],
+			[
+				"chi",
+				"children"
+			],
+			[
+				"add",
+				"addWidget"
+			],
+			[
+				"la",
+				"layout"
+			],
+			[
+				"list",
+				"listview"
+			],
+			[
+				"pa",
+				"parent〔variable〕"
+			],
+			[
+				"app",
+				"appRoot〔variable〕"
+			],
+			[
+				"di",
+				"dirname〔module〕"
+			],
+			[
+				"ap",
+				"appRoot〔variable〕"
+			],
+			[
+				"cu",
+				"currentThread〔function〕"
+			],
+			[
+				"a",
+				"assert"
+			],
+			[
+				"thre",
+				"threadName〔argument〕"
+			],
+			[
+				"th",
+				"threadName"
+			],
+			[
+				"thread",
+				"threading"
+			],
+			[
+				"kill",
+				"killProcess"
+			],
+			[
+				"ki",
+				"kill"
+			],
+			[
+				"st",
+				"started〔variable〕"
+			],
+			[
+				"_pro",
+				"_processExited〔variable〕"
+			],
+			[
+				"sa",
+				"_startProcessCalls〔variable〕"
+			],
+			[
+				"start",
+				"startProcessCalls"
+			],
+			[
+				"exi",
+				"exited〔variable〕"
+			],
+			[
+				"subpro",
+				"subproc"
+			],
+			[
+				"star",
+				"started〔variable〕"
+			],
+			[
+				"kil",
+				"killed"
+			],
+			[
+				"e",
+				"exited"
+			],
+			[
+				"s",
+				"state〔variable〕"
+			],
+			[
+				"Su",
+				"SubProc〔class〕"
+			],
+			[
+				"sub",
+				"subProcIs"
+			],
+			[
+				"cm",
+				"cmdArgs"
+			],
+			[
+				"u",
+				"utf-8"
+			],
+			[
+				"on",
+				"onRemoveFile〔function〕"
+			],
+			[
+				"remove",
+				"removeFile"
+			],
+			[
+				"delete",
+				"deleteFileButton"
+			],
+			[
+				"state",
+				"stateIs"
+			],
+			[
+				"op",
+				"opacity"
+			],
+			[
+				"ev",
+				"event〔argument〕"
+			],
+			[
+				"fil",
+				"filelistarea"
+			],
+			[
+				"Fil",
+				"FileListArea〔module〕"
+			],
+			[
+				"dr",
+				"dropEvent"
+			],
+			[
+				"up",
+				"update"
+			],
+			[
+				"stop",
+				"stopText"
+			],
+			[
+				"Fi",
+				"File〔class〕"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "src/DB/Model/Internal.hs",
+			"settings":
+			{
+				"buffer_size": 2271,
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+		[
+			[
+				[
+					"Packages/Haskell/Haskell.sublime-build",
+					""
+				],
+				[
+					"Packages/SublimeREPL/sublimerepl_build_system_hack.sublime-build",
+					""
+				],
+				[
+					"Packages/User/Cabal.sublime-build",
+					""
+				],
+				[
+					"Packages/User/Stack.sublime-build",
+					""
+				]
+			],
+			[
+				"Packages/Haskell/Haskell.sublime-build",
+				""
+			]
+		],
+		[
+			[
+				[
+					"Packages/Python/Python.sublime-build",
+					""
+				],
+				[
+					"Packages/Python/Python.sublime-build",
+					"Syntax Check"
+				],
+				[
+					"Packages/SublimeREPL/sublimerepl_build_system_hack.sublime-build",
+					""
+				],
+				[
+					"Packages/User/Cabal.sublime-build",
+					""
+				],
+				[
+					"Packages/User/Stack.sublime-build",
+					""
+				]
+			],
+			[
+				"Packages/Python/Python.sublime-build",
+				""
+			]
+		],
+		[
+			[
+				[
+					"Packages/Racket/Racket.sublime-build",
+					""
+				],
+				[
+					"Packages/SublimeREPL/sublimerepl_build_system_hack.sublime-build",
+					""
+				],
+				[
+					"Packages/User/Cabal.sublime-build",
+					""
+				],
+				[
+					"Packages/User/Stack.sublime-build",
+					""
+				]
+			],
+			[
+				"Packages/Racket/Racket.sublime-build",
+				""
+			]
+		]
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 107.0,
+		"last_filter": "remov",
+		"selected_items":
+		[
+			[
+				"remov",
+				"Package Control: Remove Package"
+			],
+			[
+				"tabsiz",
+				"Change Indent/Tab Size"
+			],
+			[
+				"indent size",
+				"Change Indent/Tab Size"
+			],
+			[
+				"indentat",
+				"Change Indent/Tab Size"
+			],
+			[
+				"update",
+				"Package Control: Upgrade/Overwrite All Packages"
+			],
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"remove",
+				"Package Control: Remove Package"
+			],
+			[
+				"set hasek",
+				"Set Syntax: Haskell"
+			],
+			[
+				"set racket",
+				"Set Syntax: Racket"
+			],
+			[
+				"set py",
+				"Set Syntax: Python"
+			],
+			[
+				"inden s",
+				"Indentation: Convert to Spaces"
+			],
+			[
+				"extra",
+				"PackageResourceViewer: Extract Package"
+			],
+			[
+				"setyp",
+				"Set Syntax: Python"
+			],
+			[
+				"instal",
+				"Package Control: Install Package"
+			],
+			[
+				"indent",
+				"Indentation: Reindent Lines"
+			],
+			[
+				"set rack",
+				"Set Syntax: Racket"
+			],
+			[
+				"BUILDWITH",
+				"Build With: Stack"
+			],
+			[
+				"set json",
+				"Set Syntax: JSON"
+			],
+			[
+				"set html",
+				"Set Syntax: HTML"
+			],
+			[
+				"set scss",
+				"Set Syntax: SCSS"
+			],
+			[
+				"set js",
+				"Set Syntax: JavaScript"
+			],
+			[
+				"set has",
+				"Set Syntax: Haskell"
+			],
+			[
+				"enabl",
+				"Package Control: Enable Package"
+			],
+			[
+				"disable",
+				"Package Control: Disable Package"
+			],
+			[
+				"wrap",
+				"Word Wrap: Toggle"
+			],
+			[
+				"set hask",
+				"Set Syntax: Haskell"
+			],
+			[
+				"set comp",
+				"Set Syntax: Sublime Completions"
+			],
+			[
+				"set ",
+				"Set Syntax: Makefile"
+			],
+			[
+				"setlit",
+				"Set Syntax: Literate Haskell"
+			],
+			[
+				"text",
+				"Set Syntax: Textile"
+			],
+			[
+				"seh",
+				"Set Syntax: Haskell"
+			],
+			[
+				"set bash",
+				"Set Syntax: Shell Script (Bash)"
+			],
+			[
+				"sethask",
+				"Set Syntax: Haskell"
+			],
+			[
+				"setliter",
+				"Set Syntax: Literate Haskell"
+			],
+			[
+				"wra",
+				"Word Wrap: Toggle"
+			],
+			[
+				"sethaskel",
+				"Set Syntax: Haskell"
+			],
+			[
+				"wrao",
+				"Word Wrap: Toggle"
+			],
+			[
+				"show",
+				"SublimeHaskell: Show symbol info"
+			],
+			[
+				"check",
+				"SublimeHaskell: Typecheck build (no codegen)"
+			],
+			[
+				"lint",
+				"SublimeLinter: Lint This View"
+			],
+			[
+				"lin",
+				"SublimeHaskell: Lint"
+			],
+			[
+				"shw",
+				"SublimeHaskell: Show type"
+			],
+			[
+				"type",
+				"SublimeHaskell: Show type"
+			],
+			[
+				"shwo",
+				"SublimeHaskell: Show type"
+			],
+			[
+				"haskell",
+				"SublimeHaskell: Show type"
+			],
+			[
+				"switch",
+				"SublimeHaskell: Switch Cabal/Cabal-Dev"
+			],
+			[
+				"che",
+				"SublimeHaskell: Check & Lint"
+			],
+			[
+				"ch",
+				"SublimeLinter: Choose Lint Mode"
+			],
+			[
+				"typecheck",
+				"SublimeHaskell: Typecheck build (no codegen)"
+			],
+			[
+				"typ",
+				"SublimeHaskell: Insert type"
+			],
+			[
+				"sty",
+				"SublimeHaskell: Show type"
+			],
+			[
+				"tye",
+				"SublimeHaskell: Show type"
+			],
+			[
+				"haskelltype",
+				"SublimeHaskell: Show type"
+			],
+			[
+				"haktype",
+				"SublimeHaskell: Insert type"
+			],
+			[
+				"ty",
+				"SublimeHaskell: Show type"
+			],
+			[
+				"symbo",
+				"SublimeHaskell: Typecheck build (no codegen)"
+			],
+			[
+				"show ",
+				"SublimeHaskell: Show type"
+			],
+			[
+				"showt",
+				"SublimeHaskell: Show type"
+			],
+			[
+				"set haskell",
+				"Set Syntax: Haskell"
+			],
+			[
+				"set hasekl",
+				"Set Syntax: Haskell Repl"
+			],
+			[
+				"sethaske",
+				"Set Syntax: Haskell"
+			],
+			[
+				"sethasekl",
+				"Set Syntax: Haskell"
+			],
+			[
+				"set hs",
+				"Set Syntax: Haskell"
+			],
+			[
+				"remove ",
+				"Package Control: Remove Package"
+			],
+			[
+				"set c",
+				"Set Syntax: C++"
+			],
+			[
+				"space",
+				"Indentation: Convert to Spaces"
+			],
+			[
+				"set hasekll",
+				"Set Syntax: Haskell"
+			],
+			[
+				"sethakse",
+				"Set Syntax: Haskell Repl"
+			],
+			[
+				"set haskel",
+				"Set Syntax: Haskell"
+			],
+			[
+				"inden",
+				"Indentation: Convert to Spaces"
+			],
+			[
+				"bash",
+				"Set Syntax: Shell Script (Bash)"
+			],
+			[
+				"set rck",
+				"Set Syntax: Racket"
+			],
+			[
+				"arm",
+				"Set Syntax: ARM Assembly"
+			],
+			[
+				"set arm",
+				"Set Syntax: ARM Assembly"
+			],
+			[
+				"set amr",
+				"Set Syntax: Markdown"
+			],
+			[
+				"assem",
+				"Set Syntax: ARM Assembly"
+			],
+			[
+				"bracket",
+				"BracketHighlighter: Toggle Global Enable"
+			],
+			[
+				"bracketguar",
+				"Preferences: BracketGuard Settings - Default"
+			],
+			[
+				"brackethei",
+				"BracketHighlighter: Toggle Global Enable"
+			],
+			[
+				"install ",
+				"Package Control: Install Package"
+			],
+			[
+				"bracketheienab",
+				"BracketHighlighter: Toggle Global Enable"
+			],
+			[
+				"resour",
+				"PackageResourceViewer: Extract Package"
+			],
+			[
+				"setschem",
+				"Set Syntax: Scheme"
+			],
+			[
+				"setracket",
+				"Set Syntax: Racket"
+			],
+			[
+				"set lis",
+				"Set Syntax: Lisp"
+			],
+			[
+				"scheme",
+				"SublimeREPL: Scheme"
+			],
+			[
+				"racket",
+				"Set Syntax: Racket"
+			],
+			[
+				"back",
+				"BracketHighlighter: Toggle Global Enable"
+			],
+			[
+				"sethash",
+				"Set Syntax: Shell Script (Bash)"
+			],
+			[
+				"seths",
+				"Set Syntax: Haskell"
+			],
+			[
+				"hs",
+				"BracketHighlighter: Swap Brackets"
+			],
+			[
+				"html",
+				"Set Syntax: HTML"
+			],
+			[
+				"less",
+				"Set Syntax: LESS"
+			],
+			[
+				"css",
+				"Set Syntax: CSS"
+			],
+			[
+				"handle",
+				"Set Syntax: Handlebars"
+			],
+			[
+				"sethtm",
+				"Set Syntax: HTML"
+			],
+			[
+				"seth",
+				"Set Syntax: Haskell"
+			],
+			[
+				"s",
+				"SublimeREPL: Shell"
+			],
+			[
+				"set htm	",
+				"Set Syntax: HTML"
+			],
+			[
+				"shell",
+				"SublimeREPL: Shell"
+			],
+			[
+				"setbash",
+				"Set Syntax: Shell Script (Bash)"
+			],
+			[
+				"pa",
+				"Package Control: Remove Package"
+			],
+			[
+				"setc++",
+				"Set Syntax: C++"
+			],
+			[
+				"set php",
+				"Set Syntax: PHP"
+			],
+			[
+				"setjs",
+				"Set Syntax: JavaScript"
+			],
+			[
+				"set blade",
+				"Set Syntax: PHP - Laravel Blade"
+			],
+			[
+				"set blad",
+				"Set Syntax: PHP - Laravel Blade"
+			],
+			[
+				"set bla",
+				"Set Syntax: PHP - Laravel Blade"
+			],
+			[
+				"set balde",
+				"Set Syntax: PHP - Laravel Blade"
+			],
+			[
+				"set css",
+				"Set Syntax: CSS"
+			],
+			[
+				"settext",
+				"Set Syntax: Plain Text"
+			],
+			[
+				"set tex	",
+				"Set Syntax: TeX"
+			],
+			[
+				"set thl",
+				"Set Syntax: HTML (Erlang)"
+			],
+			[
+				"exca",
+				"PackageResourceViewer: Extract Package"
+			],
+			[
+				"setC+",
+				"Set Syntax: C++"
+			],
+			[
+				"c++",
+				"Set Syntax: C++"
+			],
+			[
+				"setC++",
+				"Set Syntax: C++"
+			],
+			[
+				"ex",
+				"PackageResourceViewer: Extract Package"
+			],
+			[
+				"C++",
+				"Set Syntax: C++"
+			],
+			[
+				"remove pa",
+				"Package Control: Remove Package"
+			],
+			[
+				"set C++",
+				"Set Syntax: C++"
+			],
+			[
+				"set++",
+				"Set Syntax: C++"
+			],
+			[
+				"c+",
+				"Set Syntax: C++"
+			],
+			[
+				"set+",
+				"Set Syntax: C++"
+			],
+			[
+				"cetC++",
+				"Set Syntax: Objective-C++"
+			],
+			[
+				"remo",
+				"Package Control: Remove Package"
+			],
+			[
+				"set C+",
+				"Set Syntax: C++11"
+			],
+			[
+				"set C",
+				"Set Syntax: C++11"
+			]
+		],
+		"width": 532.0
+	},
+	"console":
+	{
+		"height": 126.0,
+		"history":
+		[
+			"haskell",
+			"Show toConnServerT",
+			"Show type",
+			"sublime.log_commands(True)",
+			"sublime.log_input(True)",
+			"sublime.log_commands(True)",
+			"sublime.log_input(True)",
+			"sublime.log_commands(True)",
+			"sublime.log_input(True)",
+			"sublime.log_commands(True)",
+			"sublime.log_input(True)",
+			"import urllib.request,os,hashlib; h = '7183a2d3e96f11eeadd761d777e62404' + 'e330c659d4bb41d3bdf022e94cab3cd0'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://sublime.wbond.net/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by)"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/Users/Larry_Li/lab/haskell/db-model",
+		"/Users/Larry_Li/lab/haskell/db-model/src",
+		"/Users/Larry_Li/lab/haskell/db-model/src/DB",
+		"/Users/Larry_Li/lab/haskell/db-model/src/DB/Model",
+		"/Users/Larry_Li/lab/haskell/db-model/test",
+		"/Users/Larry_Li/lab/haskell/db-model/test/Test"
+	],
+	"file_history":
+	[
+		"/Users/Larry_Li/lab/haskell/db-model/src/DB/Model.hs",
+		"/Users/Larry_Li/lab/haskell/db-model/db-model.cabal",
+		"/Users/Larry_Li/lab/haskell/db-model/stack.yaml",
+		"/Users/Larry_Li/lab/haskell/db-model/src/DB/Model/Internal.hs",
+		"/Users/Larry_Li/lab/haskell/fcache/fcache.cabal",
+		"/Users/Larry_Li/lab/haskell/fcache/src/Cache/State.hs",
+		"/Users/Larry_Li/lab/haskell/fcache.sublime-project",
+		"/Users/Larry_Li/.profile",
+		"/Users/Larry_Li/Desktop/original.tex",
+		"/Users/Larry_Li/Library/Application Support/Sublime Text 3/Packages/User/Preferences.sublime-settings",
+		"/Users/Larry_Li/Library/Application Support/Sublime Text 3/Packages/Default/Preferences.sublime-settings",
+		"/Users/Larry_Li/Library/Application Support/Sublime Text 3/Packages/SublimeHaskell/Settings/SublimeHaskell.sublime-settings",
+		"/Users/Larry_Li/lab/haskell/db-model/test/Test/Run.hs",
+		"/Users/Larry_Li/lab/haskell/db-model/src/DB/Model/_Load.hs",
+		"/Users/Larry_Li/lab/haskell/db-model/test/Spec.hs",
+		"/Users/Larry_Li/lab/haskell/db-model/src/DB/Model/Save.hs",
+		"/Users/Larry_Li/lab/haskell/db-model/test/Test/Load.hs",
+		"/Users/Larry_Li/lab/haskell/db-model/src/DB/Model/Load.hs",
+		"/Users/Larry_Li/lab/haskell/db-model/test/Test/Save.hs",
+		"/Users/Larry_Li/lab/haskell/db-model/src/DB/Model/Internal/Exception.hs",
+		"/Users/Larry_Li/lab/haskell/db-model/src/DB/Model/Class.hs",
+		"/Users/Larry_Li/lab/haskell/data-extend-generic/src/Data/Extend.hs",
+		"/Users/Larry_Li/lab/haskell/data-extend-generic/test/Spec.hs",
+		"/Users/Larry_Li/lab/haskell/data-extend-generic/src/Data/Extend/Internal.hs",
+		"/Users/Larry_Li/lab/haskell/data-extend-generic/data-extend-generic.cabal",
+		"/Users/Larry_Li/lab/haskell/data-extend-generic/stack.yaml",
+		"/Users/Larry_Li/lab/python/compress-video-ui/python/config/bilibili标准.h264",
+		"/Users/Larry_Li/lab/python/compress-video-ui/python/config/bilibili测试.h264",
+		"/Users/Larry_Li/lab/python/compress-video-ui/python/bin/testbin",
+		"/Users/Larry_Li/lab/python/compress-video-ui/python/lib/lisp.py",
+		"/Users/Larry_Li/lab/python/compress-video-ui/python/lib/autoprocess.py",
+		"/Users/Larry_Li/lab/python/compress-video-ui/python/lib/message.py",
+		"/Users/Larry_Li/lab/python/compress-video-ui/python/lib/subprocmonitor.py",
+		"/Users/Larry_Li/lab/python/compress-video-ui/python/main.py",
+		"/Users/Larry_Li/lab/python/compress-video-ui/python/lib/state.py",
+		"/Users/Larry_Li/lab/haskell/compress-videos/src/FFmpeg/Process.hs",
+		"/Users/Larry_Li/lab/haskell/compress-videos/src/FFmpeg.hs",
+		"/Users/Larry_Li/lab/haskell/compress-videos/test/Test/FFmpeg.hs",
+		"/Users/Larry_Li/lab/haskell/compress-videos/src/FFmpeg/Config.hs",
+		"/Users/Larry_Li/lab/haskell/compress-videos/compress-videos.cabal",
+		"/Users/Larry_Li/lab/haskell/compress-videos/src/FFmpeg/LoadedCfg.hs",
+		"/Users/Larry_Li/lab/haskell/compress-videos/stack.yaml",
+		"/Users/Larry_Li/lab/haskell/compress-videos/src/FFmpeg/Data/H264.hs",
+		"/Users/Larry_Li/lab/haskell/compress-videos/test/Spec.hs",
+		"/Users/Larry_Li/lab/haskell/compress-videos/test/Test/FFmpeg/H264.hs",
+		"/Users/Larry_Li/lab/seashell/src/frontend/index.html",
+		"/Users/Larry_Li/lab/seashell/src/frontend/index/includes/scripts.html",
+		"/Volumes/1159/tutorials/final_exam_review/larry/bst.rkt",
+		"/Volumes/1159/tutorials/final_exam_review/larry/bst.tex",
+		"/Users/Larry_Li/lab/haskell/compress-videos/src/Cmd.hs",
+		"/Users/Larry_Li/lab/haskell/compress-videos/out",
+		"/Users/Larry_Li/lab/haskell/compress-videos/test/test.mp4",
+		"/Users/Larry_Li/lab/haskell/compress-videos/tmp/progress",
+		"/Users/Larry_Li/lab/racket/pres/test.hs",
+		"/Users/Larry_Li/lab/haskell/compress-videos/err",
+		"/Users/Larry_Li/Library/Application Support/Sublime Text 3/Packages/User/SublimeHaskell.sublime-settings",
+		"/Users/Larry_Li/lab/haskell/compress-videos/app/Main.hs",
+		"/Users/Larry_Li/lab/haskell/compress-videos.sublime-project",
+		"/Users/Larry_Li/lab/racket/a10/zip/puzzle.rkt",
+		"/Volumes/NO NAME/graphics-fixed/puzzle.rkt",
+		"/Users/Larry_Li/lab/python/compress-video-ui/python/filelist.py",
+		"/Users/Larry_Li/lab/python/compress-video-ui/python/mainwindow_ui.py",
+		"/Users/Larry_Li/lab/racket/a10/graphics/puzzle.rkt",
+		"/Users/Larry_Li/lab/python/compress-video-ui/python/filelistitem_ui.py",
+		"/Users/Larry_Li/lab/python/compress-video-ui/python/dist/main.app/Contents/MacOS/main",
+		"/Users/Larry_Li/lab/python/compress-video-ui/python/control/configfile.py",
+		"/Users/Larry_Li/lab/python/compress-video-ui/python/tmp/progress",
+		"/Users/Larry_Li/lab/python/compress-video-ui/python/lib/__init__.py",
+		"/Users/Larry_Li/lab/python/compress-video-ui/python/tmp/process",
+		"/Users/Larry_Li/lab/python/compress-video-ui/python/bin/progress.tmp",
+		"/Users/Larry_Li/lab/python/compress-video-ui/python/bin/out",
+		"/Users/Larry_Li/lab/python/compress-video-ui/python/config/bilibili标准.cfg",
+		"/Users/Larry_Li/lab/python/compress-video-ui/python/config/bilibili高清.cfg",
+		"/Users/Larry_Li/lab/python/compress-video-ui/python/configfile.py",
+		"/Users/Larry_Li/lab/python/compress-video-ui/python/lib/qtopacity.py",
+		"/Users/Larry_Li/lab/python/compress-video-ui/python/dropable.py",
+		"/Users/Larry_Li/lab/python/compress-video-ui/main.cpp",
+		"/Users/Larry_Li/lab/python/compress-video-ui/.gitignore",
+		"/Users/Larry_Li/lab/python/compress-video-ui/python/startbutton.py",
+		"/Users/Larry_Li/lab/python/compress-video-ui/python/processbar.py",
+		"/Users/Larry_Li/lab/python/compress-video-ui/python/autoprocess.py",
+		"/Users/Larry_Li/lab/python/compress-video-ui/control.py",
+		"/Users/Larry_Li/lab/python/foo.py",
+		"/Users/Larry_Li/foo.py",
+		"/Users/Larry_Li/lab/haskell/compress-videos/src/Data/SL.hs",
+		"/Users/Larry_Li/lab/haskell/compress-videos/src/Data.hs",
+		"/Users/Larry_Li/lab/haskell/compress-videos/src/Lib.hs",
+		"/Users/Larry_Li/lab/haskell/compress-videos/test/tmp/test.h264",
+		"/Users/Larry_Li/lab/haskell/compress-videos/test/Test/SL.hs",
+		"/Users/Larry_Li/lab/haskell/compress-videos/dist/setup-config.ghc-mod.resolved-components",
+		"/Users/Larry_Li/Documents/parser241-lexer.sublime-project",
+		"/Users/Larry_Li/lab/haskell/cs135/parser241-lexer.sublime-project",
+		"/Users/Larry_Li/lab/racket/a9/a09.rkt",
+		"/Users/Larry_Li/lab/haskell/cs135/parser241-production-rule/src/Parser241/Parser/ProductionRule/Interface.hs",
+		"/Users/Larry_Li/lab/haskell/cs135/parser241/src/Parser241.hs",
+		"/Users/Larry_Li/lab/haskell/cs135/parser241/test/Spec.hs",
+		"/Users/Larry_Li/lab/haskell/cs135/parser241/parser241.cabal",
+		"/Users/Larry_Li/lab/haskell/cs135/parser241-production-rule/README.md",
+		"/Users/Larry_Li/lab/haskell/cs135/parser241-production-rule/stack.yaml",
+		"/Users/Larry_Li/lab/haskell/cs135/parser241-production-rule/parser241-production-rule.cabal",
+		"/Users/Larry_Li/lab/haskell/cs135/parser241-production-rule/parser241.cabal",
+		"/Users/Larry_Li/lab/haskell/cs135/parser241-production-rule/test/Spec.hs",
+		"/Users/Larry_Li/lab/racket/a8/email.rkt",
+		"/Users/Larry_Li/Library/Application Support/Sublime Text 3/Packages/lispindent/Default.sublime-keymap",
+		"/Users/Larry_Li/Library/Application Support/Sublime Text 3/Packages/lispindent/lispindent.sublime-settings",
+		"/Users/Larry_Li/Movies/1/compress",
+		"/Users/Larry_Li/lab/racket/a8/take.rkt",
+		"/Users/Larry_Li/lab/racket/a7/org-chart.rkt",
+		"/Users/Larry_Li/lab/racket/a7/advanced.rkt",
+		"/Users/Larry_Li/lab/racket/a7/staff.rkt",
+		"/Users/Larry_Li/lab/haskell/foo/a1.rkt",
+		"/Users/Larry_Li/lab/haskell/foo/qa.hs",
+		"/Users/Larry_Li/lab/haskell/xf/front/app/components/part-client-map/component.js",
+		"/Users/Larry_Li/lab/haskell/xf/front/app/components/part-contact-map/component.js",
+		"/Users/Larry_Li/lab/haskell/xf/front/app/root/controller.js",
+		"/Users/Larry_Li/lab/haskell/xf/front/app/root/route.js",
+		"/Users/Larry_Li/lab/haskell/xf/front/app/root/template.hbs",
+		"/Users/Larry_Li/lab/haskell/xf/front/app/index.html",
+		"/Users/Larry_Li/lab/haskell/xf/front/app/root/home/template.hbs",
+		"/Users/Larry_Li/lab/haskell/xf/front/app/root/home/style.scss",
+		"/Users/Larry_Li/lab/haskell/xf/front/app/components/part-carousel/template.hbs",
+		"/Users/Larry_Li/lab/haskell/xf/front/app/root/product/template.hbs",
+		"/Users/Larry_Li/lab/haskell/xf/front/app/components/part-client-map/template.hbs",
+		"/Users/Larry_Li/lab/haskell/xf/front/app/root/style.scss",
+		"/Users/Larry_Li/lab/haskell/xf/front/app/styles/pods.scss",
+		"/Users/Larry_Li/lab/haskell/xf/front/app/root/product/controller.js",
+		"/Users/Larry_Li/lab/haskell/xf/front/app/root/product/route.js",
+		"/Users/Larry_Li/lab/haskell/xf/front/app/components/part-carousel/style.scss"
+	],
+	"find":
+	{
+		"height": 35.0
+	},
+	"find_in_files":
+	{
+		"height": 93.0,
+		"where_history":
+		[
+			"<open folders>",
+			"/Users/Larry_Li/lab/haskell/xf/front/app",
+			"/Users/Larry_Li/lab/haskell/cs135/parser241/src/Parser241/Parser",
+			"/Users/Larry_Li/lab/haskell/Web/back/src",
+			"/Users/Larry_Li/lab/haskell/Web/back/",
+			"/Users/Larry_Li/lab/haskell/Web/back/src",
+			"/Users/Larry_Li/lab/hasekll/Web",
+			"/Users/Larry_Li/lab/hasekll/Research",
+			"/Users/Larry_Li/lab/",
+			"/Users/Larry_Li/lab/racket/compiler",
+			"/Users/Larry_Li/lab/haskell/Web/src/front/bower_components/bootstrap/less",
+			"<open folders>,/Users/Larry_Li/lab/haskell/Web/src/back",
+			"<open folders>,/Users/Larry_Li/lab/haskell/Web/src/front",
+			"<open folders>",
+			"/Applications/MAMP/htdocs/wordpress/wp-content/themes/coeur",
+			"/Applications/MAMP/htdocs/Template/Common/",
+			"/Applications/MAMP/htdocs/",
+			"/Applications/MAMP/htdocs/Template",
+			"/Applications/MAMP/htdocs/",
+			"/Applications/MAMP/htdocs/Template/",
+			"/Applications/MAMP/htdocs",
+			"/Applications/MAMP/",
+			"/Applications/MAMP/htdocs/uploads",
+			"/Applications/MAMP/htdocs/",
+			"/Applications/MAMP/htdocs/MetInfo5.2",
+			"<open folders>,/Applications/MAMP/htdocs/MetInfo5.2",
+			"<open folders>",
+			"/Applications/MAMP/htdocs/MetInfo5.2/templates/default/images/css",
+			"/Applications/MAMP/htdocs/MetInfo5.2/templates/default/images",
+			"/Applications/MAMP/htdocs/",
+			"/Applications/MAMP/htdocs/MetInfo",
+			"<open folders>",
+			"/Applications/MAMP/htdocs",
+			"/Users/Larry_Li/My Library/C/ils",
+			"/Users/Larry_Li/My Library/C/int_list",
+			""
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"Cmd",
+			"SCacheT",
+			"IOCache",
+			"IOCache ",
+			"IOCache",
+			"githubuser",
+			"SCacheT",
+			"x",
+			"iocache",
+			"sv",
+			"s ",
+			"GRun cs vs s",
+			"GRun c v s",
+			"GRun c v s ",
+			"readDB",
+			"CacheIO",
+			"cacheIO",
+			"CacheIO",
+			"cacheIO",
+			"withCache",
+			"CachedIO",
+			"Cached",
+			"DB c v s",
+			"readDB",
+			"CachedRsc",
+			"find",
+			"Cmd",
+			"indentation",
+			"tab",
+			"DB",
+			"v c ",
+			"GRun cs vs",
+			"GRun c v",
+			" Same structure,",
+			"c v",
+			"(DB c v) => ",
+			"(Run a) => ",
+			"    ",
+			"     ",
+			"    ",
+			"     ",
+			"    ",
+			"save",
+			"Run",
+			"Load",
+			"Load c v where",
+			"GLoad",
+			"gLoad",
+			"load",
+			"Load",
+			"Sql",
+			"sql",
+			"Sql",
+			"Save",
+			"save",
+			"Save",
+			"a2",
+			"a1",
+			"Save",
+			"GSave",
+			"gSave",
+			"GSave",
+			"Missmatch",
+			"Show",
+			"DataSqlCommandMismatch",
+			"DBModelException",
+			"Test2",
+			"hi",
+			"do",
+			"shouldBe",
+			"Test1",
+			"Test",
+			"Sql v c",
+			"String",
+			"SqlValue v, SqlCmd c",
+			"Int",
+			"L1",
+			":*:",
+			"c'",
+			"i'",
+			"c'",
+			"M1",
+			"i c a",
+			"f",
+			"V1",
+			"U1",
+			"K1",
+			"to",
+			"Generic",
+			"Test",
+			"String",
+			"'",
+			">>>",
+			"Int",
+			"Extend",
+			"extend",
+			"gExtend",
+			"GExtend",
+			"gExtend",
+			"GExtend",
+			"gExtend",
+			"GExtend",
+			"gExtend",
+			"GExtend",
+			"gExtend",
+			"GExtend",
+			"gExtend",
+			"GExtend",
+			"gExtend",
+			"GExtend",
+			"gExtend",
+			"test2",
+			"test1",
+			"L1",
+			"ghc-7.10.2",
+			":+:",
+			":*:",
+			"GSerialize",
+			"gput",
+			"extend",
+			"initUI",
+			"idx",
+			"assert thread",
+			"str",
+			"removeFileSignal\nremoveFileSignal",
+			"removeFileSignal",
+			"setParent",
+			"addBetween"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"Parser241.Parser.",
+			"unSaveQuery",
+			"unGetQuery",
+			"unGetMethod",
+			"unSaveMethod",
+			"Control.Monad.Except",
+			"Control.Monad.Identity",
+			"Control.Monad.Writer",
+			"Control.Monad.Reader",
+			"PropertyMethodMap",
+			"getGetMethod",
+			"getSaveMethod",
+			"getAllPaginated",
+			"(lib \"../internal\")",
+			"inst->bin",
+			"getUserByEmail",
+			"component",
+			"Pretty",
+			"pretty",
+			"fallingNum",
+			"mt19937",
+			"draw()",
+			"setLocked(int,int,bool)",
+			"setLocked",
+			"setLabel",
+			"destroy",
+			"Type",
+			"Right",
+			"Left",
+			"Down",
+			"Up",
+			"Empty",
+			"Red",
+			"Green",
+			"Blue",
+			"White",
+			"Psychedelic",
+			"Unstable",
+			"Upright",
+			"Lateral",
+			"Basic",
+			"Direction",
+			"Colour",
+			"CellType",
+			"#if",
+			"cerr << \">> ",
+			"this->tp->getWord()",
+			"getWord()",
+			"this->tp",
+			"TextProcessor*",
+			"ballots",
+			"id",
+			"field",
+			"table",
+			"current.php",
+			"run.script",
+			"STATE",
+			"posidx",
+			"mvidx",
+			"cpidx",
+			"type",
+			"dataclass",
+			"type",
+			"class",
+			"datatable",
+			"cpelem",
+			"mvelem",
+			"copyelem",
+			"rmelem",
+			"newdata",
+			"system-outter",
+			"appstr",
+			"apparr",
+			"preparr",
+			"prepstr",
+			"DataSet",
+			"Data",
+			"countallelems",
+			"countdirelems",
+			"templates",
+			"intls",
+			"print_ls",
+			""
+		],
+		"reverse": false,
+		"show_context": false,
+		"use_buffer2": true,
+		"whole_word": true,
+		"wrap": false
+	},
+	"groups":
+	[
+		{
+			"sheets":
+			[
+			]
+		},
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "src/DB/Model/Internal.hs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2271,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1349,
+								1349
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"WordCountShouldRun": true,
+							"WordCountSyntax": "haskell-sublimehaskell",
+							"bh_regions":
+							[
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content"
+							],
+							"syntax": "Packages/SublimeHaskell/Syntaxes/Haskell-SublimeHaskell.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 413.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 25.0
+	},
+	"input":
+	{
+		"height": 32.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			],
+			[
+				1,
+				0,
+				2,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			0.22076476848,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 253.0
+	},
+	"output.find_results":
+	{
+		"height": 238.0
+	},
+	"output.haskell_error_checker":
+	{
+		"height": 245.0
+	},
+	"output.haskell_sublime_load":
+	{
+		"height": 140.0
+	},
+	"output.package_dev":
+	{
+		"height": 118.0
+	},
+	"output.sublime_haskell_hdevtools_type":
+	{
+		"height": 118.0
+	},
+	"pinned_build_system": "",
+	"project": "db-model.sublime-project",
+	"replace":
+	{
+		"height": 46.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"internalmodel",
+				"src/DB/Internal/Model.hs"
+			],
+			[
+				"web",
+				"Web.cabal"
+			],
+			[
+				"cabal",
+				"Web.cabal"
+			],
+			[
+				"routeint",
+				"src/Route/Internal.hs"
+			],
+			[
+				"dbproble",
+				"src/DB/Problem.hs"
+			],
+			[
+				"problems",
+				"src/DB/Problem.hs"
+			],
+			[
+				"routprob",
+				"src/Route/Problem.hs"
+			],
+			[
+				"dbinternal",
+				"src/DB/Internal.hs"
+			],
+			[
+				"auth",
+				"src/DB/Auth.hs"
+			],
+			[
+				"",
+				"Web.cabal"
+			],
+			[
+				"token",
+				"tokenize.rkt"
+			],
+			[
+				"runhas",
+				"src/Route/RunHaskell.hs"
+			],
+			[
+				"probl",
+				"src/Route/Problem.hs"
+			],
+			[
+				"run",
+				"src/Route/RunHaskell.hs"
+			],
+			[
+				"problem.hs",
+				"src/Route/Problem.hs"
+			],
+			[
+				"probleindex",
+				"pods/problem/index/template.hbs"
+			],
+			[
+				"register.",
+				"app/styles/register.less"
+			],
+			[
+				"variable",
+				"bower_components/bootstrap/less/variables.less"
+			],
+			[
+				"sidebar",
+				"app/pods/problems/sidebar/template.hbs"
+			],
+			[
+				"variabes",
+				"bower_components/bootstrap/less/variables.less"
+			],
+			[
+				"variableless",
+				"bower_components/bootstrap/less/variables.less"
+			],
+			[
+				"boostrap/less/.less",
+				"bower_components/bootstrap/less/type.less"
+			],
+			[
+				"boostrap/less/text.less",
+				"bower_components/bootstrap/less/mixins/hide-text.less"
+			],
+			[
+				"variables",
+				"bower_components/bootstrap/less/variables.less"
+			],
+			[
+				"main",
+				"Main.hs"
+			],
+			[
+				"srccol",
+				"src/Game/Block/Color.hs"
+			],
+			[
+				"srcbl",
+				"src/Game/Block.hs"
+			],
+			[
+				"board",
+				"src/Game/Board.hs"
+			],
+			[
+				"testio",
+				"test/IO.hs"
+			],
+			[
+				"testboard",
+				"test/Board.hs"
+			],
+			[
+				"srcblok",
+				"src/Game/Block.hs"
+			],
+			[
+				"srcboard",
+				"src/Game/Board.hs"
+			],
+			[
+				"effec",
+				"src/Game/Match/Effect.hs"
+			],
+			[
+				"colorhs",
+				"src/Game/Block/Color.hs"
+			],
+			[
+				"blockhs",
+				"src/Game/Block.hs"
+			],
+			[
+				"gameboard",
+				"src/Game/Board.hs"
+			],
+			[
+				"candy",
+				"Candy.cabal"
+			],
+			[
+				"illuminate/contracts/foundation/application",
+				"vendor/laravel/framework/src/Illuminate/Contracts/Foundation/Application.php"
+			],
+			[
+				"registerfacade",
+				"vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/RegisterFacades.php"
+			],
+			[
+				"contractappli",
+				"vendor/laravel/framework/src/Illuminate/Contracts/Foundation/Application.php"
+			],
+			[
+				"facade",
+				"vendor/laravel/framework/src/Illuminate/Support/Facades/Facade.php"
+			],
+			[
+				"contractfondation",
+				"vendor/laravel/framework/src/Illuminate/Contracts/Foundation/Application.php"
+			],
+			[
+				"facad",
+				"vendor/laravel/framework/src/Illuminate/Support/Facades/Facade.php"
+			],
+			[
+				"contractcontainer",
+				"vendor/laravel/framework/src/Illuminate/Contracts/Container/Container.php"
+			],
+			[
+				"illuminate/contracts/container/container",
+				"vendor/laravel/framework/src/Illuminate/Contracts/Container/Container.php"
+			],
+			[
+				"contractfonapplication",
+				"vendor/laravel/framework/src/Illuminate/Contracts/Foundation/Application.php"
+			],
+			[
+				"fondaapplicat",
+				"vendor/laravel/framework/src/Illuminate/Foundation/Application.php"
+			],
+			[
+				"application",
+				"vendor/laravel/framework/src/Illuminate/Foundation/Application.php"
+			],
+			[
+				"databasemana",
+				"vendor/laravel/framework/src/Illuminate/Database/DatabaseManager.php"
+			],
+			[
+				"builder",
+				"vendor/laravel/framework/src/Illuminate/Database/Schema/Builder.php"
+			],
+			[
+				"assi",
+				"views/admin/assign_supervisors.html"
+			],
+			[
+				"pageper",
+				"scripts/directives/admin/pagesPermissions.js"
+			],
+			[
+				"manage",
+				"scripts/directives/admin/manage_employees.js"
+			],
+			[
+				"cont",
+				"views/admin/contact_table.html"
+			],
+			[
+				"employeeer",
+				"scripts/services/admin/EmployeeService.js"
+			],
+			[
+				"manageem",
+				"views/admin/manage_employees.html"
+			],
+			[
+				"devel",
+				"app/models/Developer.php"
+			],
+			[
+				"text",
+				"view/textview/textview.h"
+			],
+			[
+				"abs",
+				"view/viewabstract.h"
+			],
+			[
+				"view",
+				"view/graphicview/graphicview.cc"
+			],
+			[
+				"generator.cc",
+				"model/generator.cc"
+			],
+			[
+				"gra",
+				"view/graphicview/graphicview.cc"
+			],
+			[
+				"graphic",
+				"view/graphicview/graphicview.cc"
+			],
+			[
+				"graphi",
+				"view/graphicview/graphicview.cc"
+			],
+			[
+				"ai",
+				"view/graphicview/animation.cc"
+			],
+			[
+				"viewa",
+				"view/viewabstract.h"
+			],
+			[
+				"vieaab",
+				"view/viewabstract.h"
+			],
+			[
+				"ani",
+				"view/graphicview/animation.h"
+			],
+			[
+				"glo",
+				"public/global.h"
+			],
+			[
+				"graphhiv",
+				"view/graphicview/graphicview.h"
+			],
+			[
+				"textcc",
+				"view/textview/textview.cc"
+			],
+			[
+				"view.h",
+				"view/viewabstract.h"
+			],
+			[
+				"v",
+				"view/textview/textview.cc"
+			],
+			[
+				"viewtex",
+				"view/textview/textview.cc"
+			],
+			[
+				"textvew",
+				"view/textview/textview.cc"
+			],
+			[
+				"tex",
+				"view/textview/textview.h"
+			],
+			[
+				"vext",
+				"view/textview/textview.cc"
+			],
+			[
+				"vie",
+				"view/viewabstract.h"
+			],
+			[
+				"viewte",
+				"view/textview/textview.cc"
+			],
+			[
+				"view.cc",
+				"view/view.cc"
+			],
+			[
+				"textview.cc",
+				"view/textview/textview.cc"
+			],
+			[
+				"sqa",
+				"model/square.cc"
+			],
+			[
+				"abst",
+				"view/viewabstract.h"
+			],
+			[
+				"graphicview",
+				"view/graphicview/graphicview.cc"
+			],
+			[
+				"test",
+				"view/test/test.cc"
+			],
+			[
+				"b",
+				"model/board.cc"
+			],
+			[
+				"gam",
+				"controller/game.cc"
+			],
+			[
+				"squre",
+				"model/square.cc"
+			],
+			[
+				"ma",
+				"Makefile"
+			],
+			[
+				"grap",
+				"view/graphicview/graphicview.cc"
+			],
+			[
+				"foo",
+				"foo.cc"
+			],
+			[
+				"game",
+				"controller/game.cc"
+			],
+			[
+				"contro",
+				"controller/game.cc"
+			],
+			[
+				"con",
+				"control.cc"
+			],
+			[
+				"cell",
+				"cell.cc"
+			],
+			[
+				"cel",
+				"q3/cell.h"
+			],
+			[
+				"deb",
+				"q3/debug.h"
+			],
+			[
+				"grid",
+				"q3/grid.cc"
+			],
+			[
+				"contr",
+				"q3/control.cc"
+			],
+			[
+				"modi",
+				"Template/Common/Javascript/modifiable.js"
+			],
+			[
+				"std",
+				"System/stdlib.php"
+			],
+			[
+				"asid",
+				"Template/admin/Javascript/aside.js"
+			],
+			[
+				"stdlib",
+				"Template/Common/Javascript/stdlib.js"
+			],
+			[
+				"index",
+				"Template/index/index.temp"
+			],
+			[
+				"s",
+				"System/stdlib.php"
+			],
+			[
+				"aside",
+				"Template/admin/Javascript/aside.js"
+			],
+			[
+				"js",
+				"Template/admin/Javascript/jstree/jstree.js"
+			],
+			[
+				"jstree",
+				"Template/admin/Javascript/jstree/jstree.js"
+			],
+			[
+				"admin",
+				"Template/admin/admin.temp"
+			],
+			[
+				"css",
+				"Template/Common/CSS/base.css"
+			],
+			[
+				"stdl",
+				"Template/Common/Javascript/stdlib.js"
+			],
+			[
+				"as",
+				"Template/admin/Javascript/aside.js"
+			],
+			[
+				"st",
+				"System/stdlib.php"
+			],
+			[
+				"build",
+				"System/build.script.php"
+			],
+			[
+				"faq",
+				"Template/Common/Javascript/faq-functions.js"
+			],
+			[
+				"m",
+				"Template/Common/Javascript/modifiable.js"
+			],
+			[
+				"curre",
+				"System/current.php"
+			],
+			[
+				"state",
+				"System/STATE.script.php"
+			],
+			[
+				"modif",
+				"Template/Common/Javascript/modifiable.js"
+			],
+			[
+				"stdli",
+				"System/stdlib.php"
+			],
+			[
+				"stat",
+				"System/STATE.script.php"
+			],
+			[
+				"phpl",
+				"System/phpLab.php"
+			],
+			[
+				"nstall",
+				"install.php"
+			],
+			[
+				"defau",
+				"Template/default/default.css"
+			],
+			[
+				"dec",
+				"Template/default/default.css"
+			],
+			[
+				"defal",
+				"Template/default/default.css"
+			],
+			[
+				"admincss",
+				"Template/admin/admin.css"
+			],
+			[
+				"jslib",
+				"Template/Common/Javascript/stdlib.js"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 500.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"",
+				"~/lab/haskell/compress-videos/untitled.sublime-workspace"
+			]
+		],
+		"width": 380.0
+	},
+	"select_symbol":
+	{
+		"height": 392.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"S",
+				"Set"
+			],
+			[
+				"set",
+				"set_text"
+			],
+			[
+				"readstr",
+				"readstr"
+			]
+		],
+		"width": 467.0
+	},
+	"selected_group": 1,
+	"settings":
+	{
+	},
+	"show_minimap": false,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 236.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

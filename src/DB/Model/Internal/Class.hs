@@ -19,7 +19,7 @@ import qualified Data.Aeson as A
 import qualified Data.List as L
 
 newtype ModelT r m a = ModelT { unModelT :: ReaderT r (ExceptT String m) a} 
-deriving instance (Monad m) => Functor (ModelT r m)
+deriving instance (Functor m) => Functor (ModelT r m)
 deriving instance (Monad m) => Applicative (ModelT r m)
 deriving instance (Monad m) => Monad (ModelT r m)
 deriving instance (Monad m) => MonadError String (ModelT r m)

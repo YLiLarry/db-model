@@ -3,6 +3,7 @@ module DB.Model.Internal.Prelude
    
 import Text.Printf as X (printf)
 import Control.Monad as X
+import Control.Applicative as X (Applicative(..), Alternative(..))
 import Control.Monad.Trans as X
 import Control.Monad.Except as X
 import Control.Monad.State as X

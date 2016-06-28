@@ -26,6 +26,11 @@ deriving instance (Monad m) => MonadError String (ModelT r m)
 deriving instance (Monad m) => MonadReader r (ModelT r m)
 deriving instance (MonadIO m) => MonadIO (ModelT cnn m)
 deriving instance (MonadState s m) => MonadState s (ModelT r m)
+deriving instance (Monad m) => Alternative (ModelT cnn m)
+deriving instance (MonadPlus m) => MonadPlus (ModelT cnn m)
+instance MonadTrans (ModelT r) where
+   lift = ModelT . lift . lift
+   
 type Model r = ModelT r IO
 
 runModelT :: ModelT r m a -> r -> m (Either String a)

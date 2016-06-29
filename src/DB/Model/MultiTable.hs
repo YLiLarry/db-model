@@ -1,3 +1,7 @@
+{-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE TypeSynonymInstances #-}
+{-# LANGUAGE FlexibleInstances #-}
+
 module DB.Model.MultiTable 
       (MultiTable(..), 
        MultiTableR(..),
@@ -13,6 +17,7 @@ module DB.Model.MultiTable
        ModelT(..),
        rawQuery,
        runModelT,
+       mapModelT,
        Generic(..)) 
    where
    

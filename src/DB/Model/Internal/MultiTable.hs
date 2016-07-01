@@ -36,25 +36,35 @@ instance {-# OVERLAPPABLE #-} (GEq a) => Eq a where
 class (Typeable a,
        FromJSON (a Relation),
        ToJSON (a Relation), 
-       ToJSON (a Value),
        FromJSON (a Value),
+       ToJSON (a Value),
        Show (a Relation),
        Show (a Value)) => MultiTable (a :: (* -> *) -> *) where
    
    -- ^ a map from fields to table and column names
    relation :: a Relation
    
+   relation' :: a Relation
+   relation' 
+      | isNothing (L.find (isKey . snd) kvp) = error $ printf "No IsKey field for %s." $ show rel
+      | otherwise = rel
+      where 
+         rel :: a Relation
+         rel = relation
+         kvp :: [(String, Relation A.Value)]
+         kvp = obj2kvp rel 
+   
    load :: (IConnection con) => Where a -> Model con [a Value]
-   load = loadR (relation :: a Relation)
+   load = loadR relation'
    
    new :: (IConnection con) => a Value -> Model con (a Value)
-   new = newR (relation :: a Relation)
+   new = newR relation'
    
    update :: (IConnection con) => a Value -> Model con ()
-   update = updateR (relation :: a Relation)
+   update = updateR relation'
    
    remove :: (IConnection con) => a Value -> Model con ()
-   remove = removeR (relation :: a Relation)
+   remove = removeR relation'
    
    loadR :: (IConnection con) => a Relation -> Where a -> Model con [a Value]
    loadR r w = map (unsafeTo . kvp2json) <$> (I.recursiveLoad (obj2kvp r) wc)

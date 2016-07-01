@@ -18,7 +18,7 @@ data BASIC m = BASIC {
    n1  :: m String
 } deriving (Generic)
 
-instance MultiTableR BASIC
+instance MultiTable BASIC
 
 
 test :: IO ()

@@ -23,10 +23,10 @@ import DB.Model.Internal.Where as I
 import qualified Data.Aeson as A
 import qualified Data.List as L
 
-instance (MultiTableR a, Generic (a m), GToJSON (Rep (a m))) => ToJSON (a m)
-instance (MultiTableR a, Generic (a m), GFromJSON (Rep (a m))) => FromJSON (a m)
-instance (MultiTableR a, Generic (a m), GShow' (Rep (a m))) => GShow (a m)
-instance (MultiTableR a, Generic (a m), GEq' (Rep (a m))) => GEq (a m)
+instance (MultiTable a, Generic (a m), GToJSON (Rep (a m))) => ToJSON (a m)
+instance (MultiTable a, Generic (a m), GFromJSON (Rep (a m))) => FromJSON (a m)
+instance (MultiTable a, Generic (a m), GShow' (Rep (a m))) => GShow (a m)
+instance (MultiTable a, Generic (a m), GEq' (Rep (a m))) => GEq (a m)
 
 instance {-# OVERLAPPABLE #-} (GShow a) => Show a where
    show = gshow
@@ -55,16 +55,6 @@ class (Typeable a,
    
    remove :: (IConnection con) => a Value -> Model con ()
    remove = removeR (relation :: a Relation)
-
-instance {-# OVERLAPPABLE #-} (MultiTable a) => MultiTableR a 
-
-class (Typeable a,
-       FromJSON (a Relation),
-       ToJSON (a Relation), 
-       ToJSON (a Value),
-       FromJSON (a Value),
-       Show (a Relation),
-       Show (a Value)) => MultiTableR (a :: (* -> *) -> *) where
    
    loadR :: (IConnection con) => a Relation -> Where a -> Model con [a Value]
    loadR r w = map (unsafeTo . kvp2json) <$> (I.recursiveLoad (obj2kvp r) wc)

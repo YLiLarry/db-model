@@ -4,7 +4,6 @@
 
 module DB.Model.MultiTable 
       (MultiTable(..), 
-       MultiTableR(..),
        Relation(..),
        Value(..),
        WhereBuilder(..),

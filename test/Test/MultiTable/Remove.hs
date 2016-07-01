@@ -3,7 +3,7 @@
 module Test.MultiTable.Remove where
 
 import DB.Model.Internal.Prelude
-import DB.Model.MultiTable
+import DB.MonadModel.MultiTable
 import Database.HDBC
 import Database.HDBC.Sqlite3
 import Test.Hspec

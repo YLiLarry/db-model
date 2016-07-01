@@ -17,6 +17,8 @@ library
   hs-source-dirs:      src
   exposed-modules:     DB.Model.SimpleTable
                      , DB.Model.MultiTable
+                     , DB.MonadModel.SimpleTable
+                     , DB.MonadModel.MultiTable
                      , DB.Model.Internal.MultiTable
                      , DB.Model.Internal.SimpleTable
                      , DB.Model.Internal.Prelude

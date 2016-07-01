@@ -3,7 +3,7 @@
 {-# LANGUAGE FlexibleInstances #-}
 
 module DB.Model.Internal.Where 
-   (WhereResult(..), Where, (?<), WhereCompiled(..)) where
+   (WhereBuilder(..), Where, (?<), WhereCompiled(..)) where
 
 import DB.Model.Internal.Prelude
 import DB.Model.Internal.Class
@@ -24,7 +24,7 @@ type WhereExpR t = Reader (t Relation) WhereExp
 type Where t = Reader (t Relation) WhereCompiled
 type Selector t a = (t Relation -> Relation a)
 
-class WhereResult t r where
+class WhereBuilder t r where
    (<.) :: (Show a, ToJSON a) => Selector t a -> a -> r
    (<=.) :: (Show a, ToJSON a) => Selector t a -> a -> r
    (>.) :: (Show a, ToJSON a) => Selector t a -> a -> r
@@ -43,7 +43,7 @@ mkWhereExpR op selector v = do
       getTC (IsCol t c) = (t, c)
       
 
-instance WhereResult t (WhereExpR t) where
+instance WhereBuilder t (WhereExpR t) where
    (<.) = mkWhereExpR "<"
    (<=.) = mkWhereExpR "<="
    (>.) = mkWhereExpR ">"
@@ -53,7 +53,7 @@ instance WhereResult t (WhereExpR t) where
    (|.) = liftM2 (Bin "OR")
    
 
-instance WhereResult t (Where t) where
+instance WhereBuilder t (Where t) where
    f <. v = mapReader compileWhere $ f <. v
    f <=. v = mapReader compileWhere $ f <=. v
    f >. v = mapReader compileWhere $ f >. v

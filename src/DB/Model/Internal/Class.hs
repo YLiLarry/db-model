@@ -39,6 +39,7 @@ runModelT a con = runExceptT $ runReaderT (unModelT a) con
 mapModelT :: (m (Either String a) -> n (Either String b)) -> ModelT r m a -> ModelT r n b
 mapModelT f x = ModelT $ mapReaderT (mapExceptT f) $ unModelT x
 
+
 type Query = String
 type Table = String
 type Column = String

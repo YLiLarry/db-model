@@ -32,7 +32,10 @@ instance {-# OVERLAPPABLE #-} (GShow a) => Show a where
    show = gshow
 instance {-# OVERLAPPABLE #-} (GEq a) => Eq a where
    (==) = geq
-   
+
+
+-- | 'MultiTable' has a long constraint but fear not! 
+--   __ For all these instances are automatically derived as long as your data derives 'Generic'. __
 class (Typeable a,
        FromJSON (a Relation),
        ToJSON (a Relation), 
@@ -41,7 +44,19 @@ class (Typeable a,
        Show (a Relation),
        Show (a Value)) => MultiTable (a :: (* -> *) -> *) where
    
-   -- ^ a map from fields to table and column names
+   -- | Define the default relation, a mapping from fields to a database's tables and columns.
+   --
+   -- Example:
+   --
+   -- @
+   --    instance MultiTable Example where
+   --       relation = Example {
+   --          key   = IsKey [("table_name", "prime_key_col")],
+   --          field1 = IsCol "column1"
+   --       }
+   -- @
+   --
+   --   There must be exactly one field labelled 'IsKey', otherwise a 'UserError' will be thrown.
    relation :: a Relation
    
    relation' :: a Relation
@@ -54,32 +69,41 @@ class (Typeable a,
          kvp :: [(String, Relation A.Value)]
          kvp = obj2kvp rel 
    
+   -- | Load data from the database, according to the default relation.
    load :: (IConnection con) => Where a -> Model con [a Value]
    load = loadR relation'
    
+   -- | Create value in the database, according to the default relation.
    new :: (IConnection con) => a Value -> Model con (a Value)
    new = newR relation'
    
+   -- | Update the value in the database, according to the default relation.
    update :: (IConnection con) => a Value -> Model con ()
    update = updateR relation'
    
+   -- | Delete the value from the database, according to the default relation.
    remove :: (IConnection con) => a Value -> Model con ()
    remove = removeR relation'
    
+   -- | Same as 'load' except it uses the first argument as the ralation instead of the default one.
    loadR :: (IConnection con) => a Relation -> Where a -> Model con [a Value]
    loadR r w = map (unsafeTo . kvp2json) <$> (I.recursiveLoad (obj2kvp r) wc)
       where wc = runReader w r
    
+   -- | Same as 'update' except it uses the first argument as the ralation instead of the default one.
    updateR :: (IConnection con) => a Relation -> a Value -> Model con ()
    updateR r v = void $ (I.recursiveUpdate (obj2kvp r) (obj2kvp v))
    
+   -- | Same as 'new' except it uses the first argument as the ralation instead of the default one.
    newR :: (IConnection con) => a Relation -> a Value -> Model con (a Value)
    newR r v = (unsafeTo . kvp2json) <$> (I.recursiveNew (obj2kvp r) Nothing (obj2kvp v))
    
+   -- | Same as 'remove' except it uses the first argument as the ralation instead of the default one.
    removeR :: (IConnection con) => a Relation -> a Value -> Model con ()
    removeR r v = I.nonRecursiveRemove (obj2kvp r) (obj2kvp v)
 
-   
+-- | Allows you to run a raw SQL query. 
+--   This is a wrapper for 'quickQuery' in HDBC
 rawQuery :: (IConnection con, 
              Typeable a, 
              FromJSON a) => Query -> [SqlValue] -> Model con [[a]]
@@ -88,8 +112,12 @@ rawQuery q vs = do
    r <- liftIO $ withTransaction con (\cnn -> quickQuery cnn q vs)
    return $ (map . map) (cast . sql2aeson) r
 
--- | Example:
--- [[a,b,c]] <- rawQuery ...
--- printf "%d" $ (cast a :: Integer)
+-- | Helper function:
+--
+-- @
+--    [[a,b,c]] <- rawQuery ...
+--    printf "%d" $ (cast a :: Integer)
+-- @
+--
 cast :: (Typeable a, FromJSON a) => JSONValue -> a
 cast = unsafeTo

@@ -3,7 +3,7 @@
 {-# LANGUAGE FlexibleInstances #-}
 
 module DB.Model.Internal.Where 
-   (WhereBuilder(..), Where, (?<), WhereCompiled(..)) where
+   (WhereBuilder(..), Where, (?<), WhereCompiled(..), WhereExp, WhereExp') where
 
 import DB.Model.Internal.Prelude
 import DB.Model.Internal.Class
@@ -20,21 +20,25 @@ data WhereExp = Field Table Column
 
 data WhereCompiled = WhereCompiled String [A.Value] deriving (Show)
 
-type WhereExpR t = Reader (t Relation) WhereExp
+type WhereExp' t = Reader (t Relation) WhereExp
 type Where t = Reader (t Relation) WhereCompiled
-type Selector t a = (t Relation -> Relation a)
 
+-- | @t@ is the 'MultiTable' instance
+--
+--   @(t Relation -> Relation a)@ is just a field record selector function
+--
+--   @r@ is computed recursively and will eventually become a 'Where'
 class WhereBuilder t r where
-   (<.) :: (Show a, ToJSON a) => Selector t a -> a -> r
-   (<=.) :: (Show a, ToJSON a) => Selector t a -> a -> r
-   (>.) :: (Show a, ToJSON a) => Selector t a -> a -> r
-   (>=.) :: (Show a, ToJSON a) => Selector t a -> a -> r
-   (=.) :: (Show a, ToJSON a) => Selector t a -> a -> r
-   (&.) :: WhereExpR t -> WhereExpR t -> r
-   (|.) :: WhereExpR t -> WhereExpR t -> r
+   (<.) :: (Show a, ToJSON a) => (t Relation -> Relation a) -> a -> r
+   (<=.) :: (Show a, ToJSON a) => (t Relation -> Relation a) -> a -> r
+   (>.) :: (Show a, ToJSON a) => (t Relation -> Relation a) -> a -> r
+   (>=.) :: (Show a, ToJSON a) => (t Relation -> Relation a) -> a -> r
+   (=.) :: (Show a, ToJSON a) => (t Relation -> Relation a) -> a -> r
+   (&.) :: WhereExp' t -> WhereExp' t -> r
+   (|.) :: WhereExp' t -> WhereExp' t -> r
    
-mkWhereExpR :: (Show a, ToJSON a) => String -> Selector t a -> a -> WhereExpR t
-mkWhereExpR op selector v = do
+mkWhereExp' :: (Show a, ToJSON a) => String -> (t Relation -> Relation a) -> a -> WhereExp' t
+mkWhereExp' op selector v = do
    rel <- selector <$> ask
    let (tb, col) = getTC rel
    return $ Bin op (Field tb col) (Val $ unsafeTo v)
@@ -43,12 +47,12 @@ mkWhereExpR op selector v = do
       getTC (IsCol t c) = (t, c)
       
 
-instance WhereBuilder t (WhereExpR t) where
-   (<.) = mkWhereExpR "<"
-   (<=.) = mkWhereExpR "<="
-   (>.) = mkWhereExpR ">"
-   (>=.) = mkWhereExpR ">="
-   (=.) = mkWhereExpR "="
+instance WhereBuilder t (WhereExp' t) where
+   (<.) = mkWhereExp' "<"
+   (<=.) = mkWhereExp' "<="
+   (>.) = mkWhereExp' ">"
+   (>=.) = mkWhereExp' ">="
+   (=.) = mkWhereExp' "="
    (&.) = liftM2 (Bin "AND")
    (|.) = liftM2 (Bin "OR")
    
@@ -63,6 +67,8 @@ instance WhereBuilder t (Where t) where
    f |. v = mapReader compileWhere $ f |. v
    
 
+-- | Build a 'Where' clause that is a part of a prepared statement. eg.
+-- >>> ("id = ? AND name = ?" ?< [key, name])
 (?<) :: String -> [A.Value] -> Where t
 query ?< vals = return $ WhereCompiled query vals
 

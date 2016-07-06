@@ -45,11 +45,11 @@ type Table = String
 type Column = String
 type JSONValue = A.Value
 
-data Relation t = IsCol Table Column -- ^ Table name, column name, key column name in the table used for this object
-                | IsKey [(Table, Column)] -- ^ Table name, column name. Current field is a key. 
-                | HasMany Column t
-                | IsConst t
-                | IsNull
+data Relation t = IsCol Table Column      -- ^ Define the table name and column name in database
+                | IsKey [(Table, Column)] -- ^ A list of @(table, key)@ pairs, where @key@ is the __unique auto-increasing primary key__ in @table@.
+                | HasMany Column t        -- ^ Define a many-to-one relation. 'load' and 'update' will be called recursively on this field.
+                | IsConst t               -- ^ Define the field as a constant value that is unrelated to the database.
+                | IsNull                  -- ^ 'load' on this field returns 'Null'. This field is ignored by 'new', 'update' and 'delete'.
                deriving (Generic)
 
 instance (FromJSON x) => FromJSON (Relation x)

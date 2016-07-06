@@ -1,14 +1,14 @@
 name:                db-model
 version:             0.2.0.0
-synopsis:            Initial project template from stack
+synopsis:            An innovative database interface
 description:         Please see README.md
 homepage:            http://github.com/ylilarry/db-model#readme
-license:             BSD3
+license:             MIT
 license-file:        LICENSE
 author:              Yu Li
 maintainer:          ylilarry@gmail.com
-copyright:           2010 Author Here
-category:            Web
+copyright:           2016 Yu Li
+category:            Database
 build-type:          Simple
 -- extra-source-files:
 cabal-version:       >=1.10

@@ -1,3 +1,15 @@
+{-|
+Module      : DB.MonadModel.MultiTable
+Description : A monad transformer interface
+Copyright   : (c) Yu Li
+License     : MIT
+Maintainer  : ylilarry@gmail.com
+Stability   : experimental
+Portability : GHC extensions
+
+This is a monad transformer interface to the "DB.Model.MultiTable" module
+-}
+
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE FunctionalDependencies #-}
 {-# LANGUAGE FlexibleInstances #-}

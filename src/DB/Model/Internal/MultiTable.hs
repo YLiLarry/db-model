@@ -34,7 +34,8 @@ instance {-# OVERLAPPABLE #-} (GEq a) => Eq a where
    (==) = geq
 
 
--- | 'MultiTable' has a long constraint but fear not! 
+-- | 'MultiTable' has long subclasses constraints but fear not! 
+--
 --   __ For all these instances are automatically derived as long as your data derives 'Generic'. __
 class (Typeable a,
        FromJSON (a Relation),
@@ -44,15 +45,16 @@ class (Typeable a,
        Show (a Relation),
        Show (a Value)) => MultiTable (a :: (* -> *) -> *) where
    
-   -- | Define the default relation, a mapping from fields to a database's tables and columns.
+   -- | Define the default relation, a mapping from fields to database's tables and columns.
    --
    -- Example:
    --
    -- @
    --    instance MultiTable Example where
    --       relation = Example {
-   --          key   = IsKey [("table_name", "prime_key_col")],
-   --          field1 = IsCol "column1"
+   --          key   = IsKey [("table_1", "prime_key_col"), ("table_2", "prime_key_col")],
+   --          field1 = IsCol "table_1" "column_name" -- field uses data in table_1.column_name where prime_key_col=?
+   --          field2 = IsCol "table_2" "column_name" -- field uses data in table_2.column_name where prime_key_col=?
    --       }
    -- @
    --

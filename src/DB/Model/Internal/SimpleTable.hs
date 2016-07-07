@@ -29,6 +29,13 @@ instance (ToJSON x) => ToJSON (Relation x)
 instance (GShow x) => GShow (Relation x)
 instance (GEq x) => GEq (Relation x)
 
+-- | Same as 'MultiTable', __ these subclasses constraints are automatically derived as long as your data derives 'Generic'. __
+-- 
+--   Further more, __ an instance of 'SimpleTable' is automatically an instance of 'MultiTable'. __
+--
+--   All functions in 'MultiTable' are also avaliable here.
+--
+--   You do not need to declare the data as an instance of 'MultiTable' again.
 class (Typeable a, 
        FromJSON (a Relation),
        ToJSON (a Relation),

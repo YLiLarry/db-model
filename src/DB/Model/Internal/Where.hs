@@ -28,13 +28,41 @@ type Where t = Reader (t Relation) WhereCompiled
 --   @(t Relation -> Relation a)@ is just a field record selector function
 --
 --   @r@ is computed recursively and will eventually become a 'Where'
+-- 
+-- For example, 
+--
+-- @  
+--    data User m = User {
+--       key   :: m Integer,
+--       name  :: m String,
+--       email :: m String
+--    }
+--    
+--    let user <- load (name =. "bob" &. email =. "bob@example.com" &. key !=. 0)
+--    liftIO $ print $ user # key 
+--    -- prints key that identifies the user
+-- @
 class WhereBuilder t r where
+   
+   infix  4  =., !=., <., <=., >=., >.
+   infixr 3  &.
+   infixr 2  |.
+
+   -- | sql @<@
    (<.) :: (Show a, ToJSON a) => (t Relation -> Relation a) -> a -> r
+   -- | sql @<=@
    (<=.) :: (Show a, ToJSON a) => (t Relation -> Relation a) -> a -> r
+   -- | sql @>@
    (>.) :: (Show a, ToJSON a) => (t Relation -> Relation a) -> a -> r
+   -- | sql @>=@
    (>=.) :: (Show a, ToJSON a) => (t Relation -> Relation a) -> a -> r
+   -- | sql @=@
    (=.) :: (Show a, ToJSON a) => (t Relation -> Relation a) -> a -> r
+   -- | sql @!=@
+   (!=.) :: (Show a, ToJSON a) => (t Relation -> Relation a) -> a -> r
+   -- | sql AND
    (&.) :: WhereExp' t -> WhereExp' t -> r
+   -- | sql OR
    (|.) :: WhereExp' t -> WhereExp' t -> r
    
 mkWhereExp' :: (Show a, ToJSON a) => String -> (t Relation -> Relation a) -> a -> WhereExp' t
@@ -53,6 +81,7 @@ instance WhereBuilder t (WhereExp' t) where
    (>.) = mkWhereExp' ">"
    (>=.) = mkWhereExp' ">="
    (=.) = mkWhereExp' "="
+   (!=.) = mkWhereExp' "!="
    (&.) = liftM2 (Bin "AND")
    (|.) = liftM2 (Bin "OR")
    
@@ -63,12 +92,16 @@ instance WhereBuilder t (Where t) where
    f >. v = mapReader compileWhere $ f >. v
    f >=. v = mapReader compileWhere $ f >=. v
    f =. v = mapReader compileWhere $ f =. v
+   f !=. v = mapReader compileWhere $ f !=. v
    f &. v = mapReader compileWhere $ f &. v
    f |. v = mapReader compileWhere $ f |. v
    
 
 -- | Build a 'Where' clause that is a part of a prepared statement. eg.
+--
 -- >>> ("id = ? AND name = ?" ?< [key, name])
+--
+-- builds as @ ...WHERE id = /key/ && name = /name/ @
 (?<) :: String -> [A.Value] -> Where t
 query ?< vals = return $ WhereCompiled query vals
 

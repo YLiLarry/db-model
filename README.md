@@ -18,6 +18,7 @@ __Features__
   
 __Show case__
 
+```Haskell
     data User m = User {
        key   :: m Integer,
        name  :: m String,
@@ -38,7 +39,7 @@ __Show case__
       --  prepares SELECT user_id, user_name, user_email FROM user_table WHERE user_name=? 
       --  execute the statement with user_name="bob" 
       
-       print (ex :: User Value) 
+       liftIO $ print (ex :: User Value) 
       >>> User { key = Val 3, name = Val "bob", email = Val "bob@example.com" }
       
        save ex 
@@ -48,7 +49,7 @@ __Show case__
       --  user_email="bob@example.com" 
       --  fetch last_insert_id(); 
       
-       print $ ex # key 
+       liftIO $ print $ ex # key
       >>> 219  -- new row inserted with user_id=219
 
        update (ex {email = Val "ylilarry@gmail.com"}) 
@@ -63,3 +64,4 @@ __Show case__
       --  execute the statement with 
       --  user_id=219 
       
+```

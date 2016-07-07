@@ -1,8 +1,21 @@
 # db-model
 
-This is an interface designed to put data from multiple tables into a Haskell data.
+A new relational database interface for Haskell.
 
-The module uses Database.HDBC as the backend, so it supports whatever Database.HDBC supports.
+`db-model` is a relational database interface that currently wraps on Database.HDBC and Data.Aeson.
+
+Features:
+
+  * No need to write any SQL statement.
+  
+  * Naturally handles many-to-one table relations.
+  
+  * No need for Template Haskell.
+  
+  * Type safe.
+  
+  * Support for all databases that Database.HDBC supports (MySQL, Oracle, PostgreSQL, ODBC-compliant databases, etc.)
+  
 
   # Show case
   

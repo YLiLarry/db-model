@@ -16,10 +16,6 @@ This is a monad transformer interface to the "DB.Model.MultiTable" module
 
 module DB.MonadModel.MultiTable
    (module X,
-    load,
-    new,
-    update,
-    remove,
     MonadModel(..))
    where
    

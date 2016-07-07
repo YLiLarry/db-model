@@ -4,7 +4,7 @@ A new relational database interface for Haskell.
 
 `db-model` is a relational database interface that currently wraps on Database.HDBC and Data.Aeson.
 
-Features:
+__Features__
 
   * No need to write any SQL statement.
   
@@ -16,9 +16,8 @@ Features:
   
   * Support for all databases that Database.HDBC supports (MySQL, Oracle, PostgreSQL, ODBC-compliant databases, etc.)
   
+__Show case__
 
-  # Show case
-  
     data User m = User {
        key   :: m Integer,
        name  :: m String,
